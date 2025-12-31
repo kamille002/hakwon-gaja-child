@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학원가자 프리미엄 - 자녀앱 (Firebase)</title>
+    
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'GmarketSansMedium', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #E8DFF5 0%, #FCE1E4 100%);
+            min-height: 100vh;
+            color: #2D3748;
+        }
+        
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #9C6FDE 0%, #B794F6 100%);
+            padding: 25px 20px;
+            color: white;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .app-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .firebase-badge {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #9C6FDE;
+        }
+        
+        /* Login */
+        .login-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .login-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+        
+        .invite-code-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-family: monospace;
+        }
+        
+        .login-btn {
+            width: 100%;
+            max-width: 300px;
+            background: linear-gradient(135deg, #9C6FDE 0%, #B794F6 100%);
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Points */
+        .points-section {
+            background: linear-gradient(135deg, #FFD93D 0%, #FFAA4C 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .points-display {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        
+        .points-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Attendance */
+        .attendance-section {
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .attendance-title {
+            text-align: center;
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        
+        .attendance-rate {
+            font-size: 56px;
+            font-weight: bold;
+            color: #9C6FDE;
+            text-align: center;
+        }
+        
+        .progress-bar-container {
+            background: #E2E8F0;
+            height: 24px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #9C6FDE 0%, #B794F6 100%);
+            transition: width 0.5s ease;
+        }
+        
+        .encouragement-box {
+            background: linear-gradient(135deg, #E9D8FD 0%, #F3E8FF 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .encouragement-emoji {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .encouragement-text {
+            font-size: 16px;
+            color: #6B46C1;
+            font-weight: bold;
+        }
+        
+        /* Rewards */
+        .rewards-section {
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .reward-card {
+            background: #F7FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .reward-card.can-claim {
+            background: linear-gradient(135deg, #C6F6D5 0%, #9AE6B4 100%);
+            border-color: #48BB78;
+        }
+        
+        .reward-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .reward-points {
+            font-size: 14px;
+            color: #F59E0B;
+            margin-top: 5px;
+        }
+        
+        .claim-btn {
+            background: #48BB78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .claim-btn:disabled {
+            background: #E2E8F0;
+            color: #A0AEC0;
+            cursor: not-allowed;
+        }
+        
+        /* Today's Academies */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .checkin-btn {
+            background: linear-gradient(135deg, #48BB78 0%, #38A169 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .arrived-btn {
+            background: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+        }
+        
+        .academy-card {
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .academy-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .academy-info {
+            color: #4A5568;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #A0AEC0;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="app-title">🎒 학원가자</div>
+                <div class="firebase-badge">
+                    <span>🔥</span>
+                    <span>LIVE</span>
+                </div>
+            </div>
+            <div class="greeting" id="greeting">환영합니다!</div>
+        </div>
+        
+        <!-- Loading -->
+        <div id="loadingSection" class="loading">
+            Firebase 연결 중...
+        </div>
+        
+        <!-- Login -->
+        <div id="loginSection" class="main-content hidden">
+            <div class="login-section">
+                <div class="login-icon">🔐</div>
+                <div class="login-title">초대 코드 입력</div>
+                <div class="login-subtitle">부모님이 알려준 6자리 코드</div>
+                <input type="text" class="invite-code-input" id="inviteCodeInput" placeholder="------" maxlength="6" />
+                <br/><br/>
+                <button class="login-btn" onclick="login()">입장하기</button>
+            </div>
+        </div>
+        
+        <!-- Main -->
+        <div id="mainSection" class="main-content hidden">
+            <div class="points-section">
+                <div class="points-display" id="pointsDisplay">0P</div>
+                <div class="points-label">내 포인트</div>
+            </div>
+            
+            <div class="attendance-section">
+                <div class="attendance-title">이번 달 출석률</div>
+                <div class="attendance-rate" id="attendanceRate">0%</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="encouragement-box">
+                    <div class="encouragement-emoji" id="encouragementEmoji">😊</div>
+                    <div class="encouragement-text" id="encouragementText">이제 시작이야!</div>
+                </div>
+            </div>
+            
+            <div class="rewards-section">
+                <div class="section-title">🎁 보상 목록</div>
+                <div id="rewardsList"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">오늘의 학원</div>
+                    <div class="action-buttons">
+                        <button class="checkin-btn" onclick="checkIn()">출발! 🏃</button>
+                        <button class="checkin-btn arrived-btn" onclick="markArrived()">도착! 📍</button>
+                    </div>
+                </div>
+                <div id="todayAcademyList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <script>
+        // ==========================================
+        // Firebase 설정
+        // ==========================================
+        
+        // TODO: Firebase Console에서 복사한 설정으로 교체하세요!
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqsQ3GPkspxBiO-5qQnc8MhliCNZZ7sks",
+            authDomain: "hakwongaja.firebaseapp.com",
+            projectId: "hakwongaja",
+            storageBucket: "hakwongaja.firebasestorage.app",
+            messagingSenderId: "789429857818",
+            appId: "1:789429857818:web:f526c57530a59f8395aba3",
+            measurementId: "G-JG7S5Z6FG8"
+        };
+        
+        // Firebase 초기화
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        // ==========================================
+        // 유틸리티
+        // ==========================================
+        
+        const DateUtils = {
+            getTodayKorean() {
+                const days = ['일', '월', '화', '수', '목', '금', '토'];
+                return days[new Date().getDay()];
+            },
+            getDateString(date = new Date()) {
+                return date.toISOString().split('T')[0];
+            },
+            getMonthStart(date = new Date()) {
+                return new Date(date.getFullYear(), date.getMonth(), 1);
+            },
+            getMonthEnd(date = new Date()) {
+                return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            },
+            getCurrentTime() {
+                const now = new Date();
+                return \`\${now.getHours().toString().padStart(2, '0')}:\${now.getMinutes().toString().padStart(2, '0')}\`;
+            }
+        };
+        
+        const AttendanceUtils = {
+            calculateMonthlyGoal(academies) {
+                let totalDays = 0;
+                for (let academyId in academies) {
+                    const academy = academies[academyId];
+                    totalDays += academy.days.length * 4;
+                }
+                return Math.max(totalDays, 1);
+            },
+            countAttendance(attendance) {
+                if (!attendance) return 0;
+                const monthStart = DateUtils.getDateString(DateUtils.getMonthStart());
+                const monthEnd = DateUtils.getDateString(DateUtils.getMonthEnd());
+                let count = 0;
+                for (let date in attendance) {
+                    if (date >= monthStart && date <= monthEnd) {
+                        count += attendance[date].length;
+                    }
+                }
+                return count;
+            },
+            calculateRate(academies, attendance) {
+                const goal = this.calculateMonthlyGoal(academies);
+                const attended = this.countAttendance(attendance);
+                return {
+                    rate: Math.min(Math.round((attended / goal) * 100), 100),
+                    attended: attended,
+                    goal: goal,
+                    remaining: Math.max(goal - attended, 0)
+                };
+            },
+            getMilestone(rate) {
+                if (rate >= 100) return { level: 4, badge: '💎', name: '완벽!', bonus: 100 };
+                if (rate >= 90) return { level: 3, badge: '🥇', name: '거의 완벽!', bonus: 50 };
+                if (rate >= 70) return { level: 2, badge: '🥈', name: '꾸준함!', bonus: 30 };
+                if (rate >= 50) return { level: 1, badge: '🥉', name: '첫 걸음!', bonus: 10 };
+                return { level: 0, badge: '🌱', name: '시작!', bonus: 0 };
+            },
+            getEncouragementMessage(rate) {
+                if (rate >= 100) return '💎 완벽해! 너 정말 최고야! 🎊';
+                if (rate >= 90) return '🥇 대박! 90%야! 끝까지 가자! ⭐';
+                if (rate >= 70) return '🥈 거의 다 왔어! 조금만 더! 🔥';
+                if (rate >= 50) return '🥉 절반 넘었다! 대단해! 🎉';
+                if (rate >= 30) return '잘하고 있어! 계속 가보자! 💪';
+                return '이제 시작이야! 천천히 가자 😊';
+            }
+        };
+        
+        const AlarmUtils = {
+            getTodayAcademies(academies) {
+                const today = DateUtils.getTodayKorean();
+                const result = [];
+                for (let id in academies) {
+                    const academy = academies[id];
+                    if (academy.days.includes(today)) {
+                        result.push({ id, ...academy });
+                    }
+                }
+                result.sort((a, b) => a.departureTime.localeCompare(b.departureTime));
+                return result;
+            },
+            checkAlarms(academies, voiceRecordingURL, onAlarm) {
+                const currentTime = DateUtils.getCurrentTime();
+                const todayAcademies = this.getTodayAcademies(academies);
+                
+                todayAcademies.forEach(academy => {
+                    if (academy.departureTime === currentTime) {
+                        const alarmKey = \`alarm_\${academy.id}_\${DateUtils.getDateString()}\`;
+                        if (!sessionStorage.getItem(alarmKey)) {
+                            sessionStorage.setItem(alarmKey, 'true');
+                            if (voiceRecordingURL) {
+                                const audio = new Audio(voiceRecordingURL);
+                                audio.play();
+                            }
+                            onAlarm(academy);
+                        }
+                    }
+                });
+            }
+        };
+        
+        // ==========================================
+        // 앱 데이터
+        // ==========================================
+        
+        let childData = null;
+        let childId = null;
+        let alarmInterval = null;
+        let unsubscribeChild = null;
+        
+        // ==========================================
+        // Firebase 초기화
+        // ==========================================
+        
+        async function init() {
+            try {
+                // 저장된 childId 확인
+                const savedChildId = localStorage.getItem('childId_firebase');
+                
+                if (savedChildId) {
+                    // 이미 로그인한 적 있음
+                    childId = savedChildId;
+                    await loadChildData();
+                } else {
+                    // 로그인 필요
+                    showLogin();
+                }
+                
+            } catch (error) {
+                console.error('Init error:', error);
+                document.getElementById('loadingSection').innerHTML = 
+                    'Firebase 연결 실패!<br/><small>firebaseConfig를 확인해주세요.</small>';
+            }
+        }
+        
+        function showLogin() {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+        
+        function showMainApp() {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainSection').classList.remove('hidden');
+        }
+        
+        async function loadChildData() {
+            try {
+                // Firestore에서 자녀 데이터 가져오기
+                const childDoc = await db.collection('children').doc(childId).get();
+                
+                if (!childDoc.exists) {
+                    alert('유효하지 않은 초대 코드입니다!');
+                    localStorage.removeItem('childId_firebase');
+                    showLogin();
+                    return;
+                }
+                
+                childData = { id: childDoc.id, ...childDoc.data() };
+                
+                // 실시간 업데이트 구독
+                subscribeToUpdates();
+                
+                showMainApp();
+                render();
+                
+                // 알람 체크 시작
+                startAlarmCheck();
+                
+            } catch (error) {
+                console.error('Load child data error:', error);
+                alert('데이터 로드 실패!');
+            }
+        }
+        
+        function subscribeToUpdates() {
+            // 자녀 데이터 실시간 구독
+            unsubscribeChild = db.collection('children').doc(childId)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        childData = { id: doc.id, ...doc.data() };
+                        render();
+                    }
+                });
+        }
+        
+        async function login() {
+            const inviteCode = document.getElementById('inviteCodeInput').value.trim().toUpperCase();
+            
+            if (inviteCode.length !== 6) {
+                alert('6자리 초대 코드를 입력해주세요!');
+                return;
+            }
+            
+            try {
+                // Firestore에서 초대 코드로 자녀 찾기
+                const snapshot = await db.collection('children')
+                    .where('inviteCode', '==', inviteCode)
+                    .limit(1)
+                    .get();
+                
+                if (snapshot.empty) {
+                    alert('유효하지 않은 초대 코드입니다!');
+                    return;
+                }
+                
+                const doc = snapshot.docs[0];
+                childId = doc.id;
+                childData = { id: doc.id, ...doc.data() };
+                
+                // childId 저장
+                localStorage.setItem('childId_firebase', childId);
+                
+                // 실시간 업데이트 구독
+                subscribeToUpdates();
+                
+                showMainApp();
+                render();
+                
+                // 알람 체크 시작
+                startAlarmCheck();
+                
+                alert(\`환영합니다, \${childData.name}! 🎉\`);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('로그인 실패! 다시 시도해주세요.');
+            }
+        }
+        
+        // ==========================================
+        // 알람
+        // ==========================================
+        
+        function startAlarmCheck() {
+            if (alarmInterval) clearInterval(alarmInterval);
+            alarmInterval = setInterval(() => {
+                checkAlarms();
+            }, 60000); // 1분마다
+            checkAlarms();
+        }
+        
+        function checkAlarms() {
+            if (!childData) return;
+            
+            AlarmUtils.checkAlarms(
+                childData.academies || {}, 
+                childData.voiceRecordingURL,
+                (academy) => {
+                    alert(\`🔔 알람!\n\n\${academy.name} 출발 시간이에요!\n수업 시작: \${academy.classTime}\`);
+                }
+            );
+        }
+        
+        // ==========================================
+        // 출석 체크
+        // ==========================================
+        
+        async function checkIn() {
+            if (!childData) return;
+            
+            const todayAcademies = AlarmUtils.getTodayAcademies(childData.academies || {});
+            
+            if (todayAcademies.length === 0) {
+                alert('오늘은 학원이 없어요!');
+                return;
+            }
+            
+            try {
+                const today = DateUtils.getDateString();
+                const attendance = childData.attendance || {};
+                
+                if (!attendance[today]) {
+                    attendance[today] = [];
+                }
+                
+                todayAcademies.forEach(academy => {
+                    if (!attendance[today].includes(academy.id)) {
+                        attendance[today].push(academy.id);
+                    }
+                });
+                
+                // Firestore 업데이트
+                await db.collection('children').doc(childId).update({
+                    attendance: attendance,
+                    points: (childData.points || 0) + 10
+                });
+                
+                alert('✅ 출발 확인! +10P');
+                
+            } catch (error) {
+                console.error('Check-in error:', error);
+                alert('출석 체크 실패! 다시 시도해주세요.');
+            }
+        }
+        
+        async function markArrived() {
+            if (!childData) return;
+            
+            try {
+                const today = DateUtils.getDateString();
+                const arrivals = childData.arrivals || {};
+                arrivals[today] = Date.now();
+                
+                // Firestore 업데이트
+                await db.collection('children').doc(childId).update({
+                    arrivals: arrivals
+                });
+                
+                alert('📍 도착 완료!\n부모님께 알림이 갔어요!');
+                
+            } catch (error) {
+                console.error('Mark arrived error:', error);
+                alert('도착 알림 실패! 다시 시도해주세요.');
+            }
+        }
+        
+        // ==========================================
+        // 보상 교환
+        // ==========================================
+        
+        async function claimReward(rewardId) {
+            if (!childData) return;
+            
+            const reward = childData.rewards[rewardId];
+            if (!reward) return;
+            
+            if (childData.points < reward.points) {
+                alert('포인트가 부족해요!');
+                return;
+            }
+            
+            if (!confirm(\`"\${reward.name}"을(를) 받으시겠어요?\n\${reward.points}P가 차감됩니다.\`)) {
+                return;
+            }
+            
+            try {
+                // Firestore 업데이트
+                await db.collection('children').doc(childId).update({
+                    points: childData.points - reward.points
+                });
+                
+                alert(\`🎉 축하해요!\n"\${reward.name}"을(를) 받았어요!\`);
+                
+            } catch (error) {
+                console.error('Claim reward error:', error);
+                alert('보상 교환 실패! 다시 시도해주세요.');
+            }
+        }
+        
+        // ==========================================
+        // 렌더링
+        // ==========================================
+        
+        function render() {
+            if (!childData) return;
+            
+            document.getElementById('greeting').textContent = \`안녕, \${childData.name}! 💚\`;
+            document.getElementById('pointsDisplay').textContent = (childData.points || 0) + 'P';
+            
+            const stats = AttendanceUtils.calculateRate(
+                childData.academies || {}, 
+                childData.attendance || {}
+            );
+            
+            document.getElementById('attendanceRate').textContent = stats.rate + '%';
+            document.getElementById('progressBar').style.width = stats.rate + '%';
+            
+            const milestone = AttendanceUtils.getMilestone(stats.rate);
+            document.getElementById('encouragementEmoji').textContent = milestone.badge;
+            document.getElementById('encouragementText').textContent = 
+                AttendanceUtils.getEncouragementMessage(stats.rate);
+            
+            renderRewardsList();
+            renderTodayAcademies();
+        }
+        
+        function renderRewardsList() {
+            const container = document.getElementById('rewardsList');
+            const rewards = childData.rewards || {};
+            
+            if (Object.keys(rewards).length === 0) {
+                container.innerHTML = \`
+                    <div class="empty-state">
+                        <div class="empty-icon">🎁</div>
+                        <div class="empty-text">부모님이 보상을 등록하면<br/>여기에 나타나요!</div>
+                    </div>
+                \`;
+                return;
+            }
+            
+            container.innerHTML = Object.keys(rewards).map(rewardId => {
+                const reward = rewards[rewardId];
+                const canClaim = childData.points >= reward.points;
+                
+                return \`
+                    <div class="reward-card \${canClaim ? 'can-claim' : ''}">
+                        <div>
+                            <div class="reward-name">\${reward.name}</div>
+                            <div class="reward-points">\${reward.points}P</div>
+                        </div>
+                        <button class="claim-btn" \${canClaim ? '' : 'disabled'} onclick="claimReward('\${rewardId}')">
+                            \${canClaim ? '받기!' : '부족'}
+                        </button>
+                    </div>
+                \`;
+            }).join('');
+        }
+        
+        function renderTodayAcademies() {
+            const container = document.getElementById('todayAcademyList');
+            const todayAcademies = AlarmUtils.getTodayAcademies(childData.academies || {});
+            
+            if (todayAcademies.length === 0) {
+                container.innerHTML = \`
+                    <div class="empty-state">
+                        <div class="empty-icon">🎉</div>
+                        <div class="empty-text">오늘은 학원이 없어요!<br/>푹 쉬세요!</div>
+                    </div>
+                \`;
+                return;
+            }
+            
+            container.innerHTML = todayAcademies.map(academy => {
+                return \`
+                    <div class="academy-card">
+                        <div class="academy-name">\${academy.name}</div>
+                        <div class="academy-info">🏃 출발: \${academy.departureTime}</div>
+                        <div class="academy-info">📖 수업: \${academy.classTime}</div>
+                    </div>
+                \`;
+            }).join('');
+        }
+        
+        // ==========================================
+        // 시작
+        // ==========================================
+        
+        window.addEventListener('DOMContentLoaded', init);
+        
+        // 페이지 이탈 시 구독 해제
+        window.addEventListener('beforeunload', () => {
+            if (unsubscribeChild) unsubscribeChild();
+            if (alarmInterval) clearInterval(alarmInterval);
+        });
+    </script>
+</body>
+</html>

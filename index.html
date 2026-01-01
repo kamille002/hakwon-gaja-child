@@ -176,53 +176,6 @@
         }
         
         /* Attendance Calendar */
-        .calendar-section {
-            background: white;
-            border: 2px solid #E2E8F0;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .calendar-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-        
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-size: 14px;
-            background: #F7FAFC;
-        }
-        
-        .calendar-day.header {
-            font-weight: bold;
-            background: transparent;
-            color: #718096;
-        }
-        
-        .calendar-day.attended {
-            background: #48BB78;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .calendar-day.today {
-            border: 2px solid #4299E1;
-        }
-        
         /* Rewards */
         .rewards-section {
             margin-bottom: 20px;
@@ -298,6 +251,104 @@
         .stat-label {
             color: #718096;
             font-size: 14px;
+        }
+        
+        /* Attendance Stamp Cards */
+        .stamp-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stamp-card {
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .stamp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stamp-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2D3748;
+        }
+        
+        .stamp-month {
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .stamps-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        
+        .stamp {
+            font-size: 32px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stamp.completed {
+            animation: stamp-pop 0.3s ease-out;
+        }
+        
+        @keyframes stamp-pop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .stamp-stats {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #E2E8F0;
+        }
+        
+        .stamp-count {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2D3748;
+            margin-bottom: 5px;
+        }
+        
+        .stamp-percentage {
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        .stamp-streak {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #FFD93D 0%, #FFAA4C 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .stamp-message {
+            font-size: 14px;
+            color: #48BB78;
+            font-weight: bold;
+            margin-top: 10px;
         }
         
         /* Empty State */
@@ -580,11 +631,8 @@
                     <div id="scheduleList"></div>
                 </div>
                 
-                <!-- Attendance Calendar -->
-                <div class="calendar-section">
-                    <div class="calendar-header">📅 이번 주 출석</div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
-                </div>
+                <!-- Attendance Stamp Cards -->
+                <div class="stamp-cards" id="stampCards"></div>
                 
                 <!-- Rewards -->
                 <div class="rewards-section">
@@ -641,6 +689,43 @@
         let watchId = null;
         let alarmInterval = null;
         let currentAlarmAcademy = null;
+        
+        // 한국 공휴일 데이터 (2026-2027)
+        const koreanHolidays = {
+            // 2026년
+            '2026-01-01': '신정',
+            '2026-01-31': '설날 연휴',
+            '2026-02-01': '설날 연휴',
+            '2026-02-02': '설날',
+            '2026-03-01': '삼일절',
+            '2026-05-05': '어린이날',
+            '2026-05-24': '석가탄신일',
+            '2026-06-06': '현충일',
+            '2026-08-15': '광복절',
+            '2026-09-26': '추석 연휴',
+            '2026-09-27': '추석 연휴',
+            '2026-09-28': '추석',
+            '2026-10-03': '개천절',
+            '2026-10-09': '한글날',
+            '2026-12-25': '성탄절',
+            
+            // 2027년
+            '2027-01-01': '신정',
+            '2027-02-19': '설날 연휴',
+            '2027-02-20': '설날',
+            '2027-02-21': '설날 연휴',
+            '2027-03-01': '삼일절',
+            '2027-05-05': '어린이날',
+            '2027-05-13': '석가탄신일',
+            '2027-06-06': '현충일',
+            '2027-08-15': '광복절',
+            '2027-10-03': '개천절',
+            '2027-10-06': '추석 연휴',
+            '2027-10-07': '추석',
+            '2027-10-08': '추석 연휴',
+            '2027-10-09': '한글날',
+            '2027-12-25': '성탄절'
+        };
         
         // Get child ID from localStorage
         childId = localStorage.getItem('childId');
@@ -1149,7 +1234,7 @@
             renderPoints();
             renderStats();
             renderSchedule();
-            renderCalendar();
+            renderStampCards();
             renderRewards();
         }
         
@@ -1245,41 +1330,196 @@
             }).join('');
         }
         
-        function renderCalendar() {
-            const container = document.getElementById('calendarGrid');
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
+        function renderStampCards() {
+            if (!childData || !childData.academies || childData.academies.length === 0) {
+                document.getElementById('stampCards').innerHTML = '';
+                return;
+            }
+            
             const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            const dayOfWeek = today.getDay(); // 0=일, 1=월, 2=화, 3=수, 4=목, 5=금, 6=토
+            
+            const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
             
             let html = '';
             
-            // Headers
-            days.forEach(day => {
-                html += `<div class="calendar-day header">${day}</div>`;
+            childData.academies.forEach(academy => {
+                if (!academy.days || academy.days.length === 0) return;
+                
+                // Calculate total sessions this month
+                const totalSessions = calculateMonthSessions(academy.days, year, month);
+                
+                // Calculate completed sessions
+                const completedSessions = calculateCompletedSessions(academy, year, month);
+                
+                // Calculate today's position
+                const todayPosition = calculateTodayPosition(academy.days, year, month);
+                
+                // Calculate streak
+                const streak = calculateStreak(academy);
+                
+                // Calculate percentage
+                const percentage = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
+                
+                // Get encouragement message
+                const message = getEncouragementMessage(percentage);
+                
+                // Generate stamps
+                let stamps = '';
+                for (let i = 0; i < totalSessions; i++) {
+                    let emoji = '⭕'; // Default: not yet
+                    let className = 'stamp';
+                    
+                    if (i < completedSessions) {
+                        emoji = '🎉'; // Completed
+                        className += ' completed';
+                    } else if (i === todayPosition) {
+                        emoji = '💫'; // Today
+                        className += ' today';
+                    }
+                    
+                    stamps += `<div class="${className}">${emoji}</div>`;
+                }
+                
+                // Days display
+                const daysText = academy.days.map(d => dayNames[d]).join('/');
+                
+                html += `
+                    <div class="stamp-card">
+                        <div class="stamp-header">
+                            <div class="stamp-title">📚 ${academy.name}</div>
+                            <div class="stamp-month">${month + 1}월 · ${daysText}</div>
+                        </div>
+                        <div class="stamps-grid">
+                            ${stamps}
+                        </div>
+                        <div class="stamp-stats">
+                            <div class="stamp-count">${completedSessions}/${totalSessions}회 출석</div>
+                            <div class="stamp-percentage">${percentage}% 달성</div>
+                            ${streak > 1 ? `<div class="stamp-streak">🔥 연속 ${streak}일 출석 중!</div>` : ''}
+                            ${message ? `<div class="stamp-message">${message}</div>` : ''}
+                        </div>
+                    </div>
+                `;
             });
             
-            // Week days
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - today.getDay() + i);
-                
+            document.getElementById('stampCards').innerHTML = html;
+        }
+        
+        // Calculate total sessions in a month for given days
+        function calculateMonthSessions(days, year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            let count = 0;
+            
+            for (let date = new Date(firstDay); date <= lastDay; date.setDate(date.getDate() + 1)) {
+                const dayOfWeek = date.getDay();
                 const dateStr = date.toISOString().split('T')[0];
-                const dayNum = date.getDate();
-                const isToday = dateStr === today.toISOString().split('T')[0];
                 
-                const attended = childData.academies.some(academy => 
-                    academy.attendanceHistory?.some(h => 
-                        h.date === dateStr && h.status === 'attended'
-                    )
-                );
-                
-                let classes = 'calendar-day';
-                if (isToday) classes += ' today';
-                if (attended) classes += ' attended';
-                
-                html += `<div class="${classes}">${dayNum}</div>`;
+                // 공휴일이 아니고 수업 요일인 경우만 카운트
+                if (days.includes(dayOfWeek) && !koreanHolidays[dateStr]) {
+                    count++;
+                }
             }
             
-            container.innerHTML = html;
+            return count;
+        }
+        
+        // Calculate completed sessions
+        function calculateCompletedSessions(academy, year, month) {
+            if (!academy.attendanceHistory) return 0;
+            
+            let count = 0;
+            const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+            
+            academy.attendanceHistory.forEach(record => {
+                if (record.date.startsWith(monthStr) && record.status === 'attended') {
+                    count++;
+                }
+            });
+            
+            return count;
+        }
+        
+        // Calculate today's position in the month
+        function calculateTodayPosition(days, year, month) {
+            const today = new Date();
+            if (today.getFullYear() !== year || today.getMonth() !== month) {
+                return -1; // Not this month
+            }
+            
+            const todayDayOfWeek = today.getDay();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // 오늘이 공휴일이면 표시 안 함
+            if (koreanHolidays[todayStr]) {
+                return -1;
+            }
+            
+            if (!days.includes(todayDayOfWeek)) {
+                return -1; // Not a session day
+            }
+            
+            const firstDay = new Date(year, month, 1);
+            let position = 0;
+            
+            for (let date = new Date(firstDay); date < today; date.setDate(date.getDate() + 1)) {
+                const dayOfWeek = date.getDay();
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // 공휴일이 아니고 수업 요일인 경우만 카운트
+                if (days.includes(dayOfWeek) && !koreanHolidays[dateStr]) {
+                    position++;
+                }
+            }
+            
+            return position;
+        }
+        
+        // Calculate attendance streak
+        function calculateStreak(academy) {
+            if (!academy.attendanceHistory || !academy.days) return 0;
+            
+            const today = new Date();
+            let streak = 0;
+            let checkDate = new Date(today);
+            
+            // Go backwards from today
+            for (let i = 0; i < 30; i++) { // Check last 30 days
+                const dayOfWeek = checkDate.getDay();
+                
+                if (academy.days.includes(dayOfWeek)) {
+                    const dateStr = checkDate.toISOString().split('T')[0];
+                    
+                    const attended = academy.attendanceHistory.some(h => 
+                        h.date === dateStr && h.status === 'attended'
+                    );
+                    
+                    if (attended) {
+                        streak++;
+                    } else {
+                        break; // Streak broken
+                    }
+                }
+                
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+            
+            return streak;
+        }
+        
+        // Get encouragement message based on percentage
+        function getEncouragementMessage(percentage) {
+            if (percentage >= 80) {
+                return '완벽해요! 🌟';
+            } else if (percentage >= 50) {
+                return '잘하고 있어요! 💪';
+            } else if (percentage > 0) {
+                return '힘내요! 💙';
+            }
+            return '';
         }
         
         function renderRewards() {

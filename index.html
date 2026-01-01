@@ -28,8 +28,52 @@
             color: #2D3748;
         }
         
+        /* PC Layout with Ad Space */
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .ad-sidebar {
+            display: none;
+            width: 300px;
+            flex-shrink: 0;
+        }
+        
+        .ad-box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #CBD5E0;
+            font-size: 14px;
+            text-align: center;
+            position: sticky;
+            top: 20px;
+        }
+        
+        /* PC 화면에서 광고 표시 */
+        @media (min-width: 1200px) {
+            .page-wrapper {
+                padding: 20px;
+            }
+            .ad-sidebar {
+                display: block;
+            }
+        }
+        
         .app-container {
             max-width: 480px;
+            width: 100%;
             margin: 0 auto;
             background: white;
             min-height: 100vh;
@@ -100,172 +144,174 @@
             background: white;
             border: 2px solid #E2E8F0;
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 15px;
-            position: relative;
+            transition: all 0.3s;
         }
         
-        .academy-item.active {
+        .academy-item:hover {
             border-color: #48BB78;
-            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.2);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.2);
+        }
+        
+        .academy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
         }
         
         .academy-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #2D3748;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .academy-time {
-            color: #4A5568;
-            font-size: 15px;
-            margin: 5px 0;
-        }
-        
-        .distance-info {
-            background: #BEE3F8;
-            color: #2C5282;
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 10px;
+            color: #718096;
             font-size: 14px;
-            text-align: center;
+            margin-bottom: 10px;
         }
         
-        /* Action Buttons */
-        .action-section {
+        .check-btn {
+            background: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+        
+        .check-btn.checked {
+            background: linear-gradient(135deg, #A0AEC0 0%, #CBD5E0 100%);
+            cursor: not-allowed;
+        }
+        
+        /* Alarm Overlay */
+        .alarm-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .alarm-overlay.active {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 20px 0;
+            animation: fadeIn 0.5s;
         }
         
-        .action-btn {
-            padding: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .alarm-content {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 30px;
+            max-width: 90%;
+            width: 400px;
+            animation: bounceIn 0.6s;
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .alarm-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: ring 1s infinite;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(-10deg); }
+            20%, 40% { transform: rotate(10deg); }
+        }
+        
+        .alarm-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2D3748;
+            margin-bottom: 10px;
+        }
+        
+        .alarm-message {
+            font-size: 18px;
+            color: #4A5568;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .alarm-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .alarm-btn {
+            flex: 1;
+            padding: 15px;
             border: none;
             border-radius: 15px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+        }
+        
+        .snooze-btn {
+            background: #FED7AA;
+            color: #7C2D12;
+        }
+        
+        .stop-btn {
+            background: linear-gradient(135deg, #FC8181 0%, #F56565 100%);
             color: white;
         }
         
-        .depart-btn {
-            background: linear-gradient(135deg, #4299E1 0%, #63B3ED 100%);
+        .alarm-btn:active {
+            transform: scale(0.95);
         }
         
-        .depart-btn:disabled {
-            background: #CBD5E0;
-            cursor: not-allowed;
-        }
-        
-        .arrive-btn {
-            background: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
-        }
-        
-        .arrive-btn:disabled {
-            background: #CBD5E0;
-            cursor: not-allowed;
-        }
-        
-        .action-btn:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-        
-        /* Attendance Calendar */
-        /* Rewards */
-        .rewards-section {
-            margin-bottom: 20px;
-        }
-        
-        .reward-item {
-            background: white;
-            border: 2px solid #E2E8F0;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .reward-info {
-            flex: 1;
-        }
-        
-        .reward-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2D3748;
-            margin-bottom: 5px;
-        }
-        
-        .reward-cost {
-            color: #4A5568;
-            font-size: 14px;
-        }
-        
-        .reward-status {
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        
-        .reward-status.available {
-            background: #C6F6D5;
-            color: #22543D;
-        }
-        
-        .reward-status.locked {
-            background: #FED7D7;
-            color: #742A2A;
-        }
-        
-        /* Stats */
-        .stats-section {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: white;
-            border: 2px solid #E2E8F0;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #48BB78;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #718096;
-            font-size: 14px;
-        }
-        
-        /* Attendance Stamp Cards */
-        .stamp-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
+        /* Stamp Card */
         .stamp-card {
             background: white;
             border: 2px solid #E2E8F0;
             border-radius: 15px;
             padding: 20px;
+            margin-bottom: 20px;
         }
         
         .stamp-header {
@@ -281,74 +327,186 @@
             color: #2D3748;
         }
         
-        .stamp-month {
+        .streak-badge {
+            background: linear-gradient(135deg, #FC8181 0%, #F56565 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
             font-size: 12px;
-            color: #718096;
+            font-weight: bold;
         }
         
-        .stamps-grid {
-            display: flex;
-            flex-wrap: wrap;
+        .stamp-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
             gap: 8px;
-            margin-bottom: 15px;
-            justify-content: center;
         }
         
-        .stamp {
-            font-size: 32px;
-            width: 40px;
-            height: 40px;
+        .stamp-cell {
+            aspect-ratio: 1;
+            border: 2px dashed #E2E8F0;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 24px;
+            background: #F7FAFC;
         }
         
-        .stamp.completed {
-            animation: stamp-pop 0.3s ease-out;
+        .stamp-cell.filled {
+            border: 2px solid #48BB78;
+            background: linear-gradient(135deg, #D4F4DD 0%, #A8E6CF 100%);
+            animation: stampPop 0.4s;
         }
         
-        @keyframes stamp-pop {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        @keyframes stampPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
         
-        .stamp-stats {
+        /* PIN Setup Screen */
+        .pin-setup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #D4F4DD 0%, #A8E6CF 100%);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .pin-setup.active {
+            display: flex;
+        }
+        
+        .pin-content {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
             text-align: center;
-            padding-top: 15px;
-            border-top: 1px solid #E2E8F0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
         
-        .stamp-count {
-            font-size: 18px;
+        .pin-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .pin-title {
+            font-size: 24px;
             font-weight: bold;
             color: #2D3748;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         
-        .stamp-percentage {
-            font-size: 14px;
+        .pin-description {
             color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.5;
         }
         
-        .stamp-streak {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: linear-gradient(135deg, #FFD93D 0%, #FFAA4C 100%);
+        .pin-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .pin-input {
+            width: 50px;
+            height: 60px;
+            font-size: 28px;
+            text-align: center;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .pin-input:focus {
+            outline: none;
+            border-color: #48BB78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+        
+        .pin-error {
+            color: #F56565;
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .pin-error.show {
+            opacity: 1;
+        }
+        
+        .connect-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
+            border: none;
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 16px;
             font-weight: bold;
-            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .stamp-message {
-            font-size: 14px;
-            color: #48BB78;
-            font-weight: bold;
-            margin-top: 10px;
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+        
+        .connect-btn:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #E2E8F0;
+            border-top-color: #48BB78;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: #718096;
+            font-size: 16px;
+        }
+        
+        .hidden {
+            display: none !important;
         }
         
         /* Empty State */
@@ -360,469 +518,268 @@
         
         .empty-icon {
             font-size: 48px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .empty-text {
             font-size: 16px;
+            margin-bottom: 5px;
         }
         
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #48BB78;
-            font-size: 16px;
+        .empty-subtext {
+            font-size: 13px;
         }
         
-        /* PIN Setup Screen */
-        .pin-setup {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .pin-setup.active {
-            display: flex;
-        }
-        
-        .pin-setup-content {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .pin-setup-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-        
-        .pin-setup-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2D3748;
-            margin-bottom: 10px;
-        }
-        
-        .pin-setup-subtitle {
-            color: #718096;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-        
-        .pin-input-container {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        
-        .pin-digit {
-            width: 50px;
-            height: 60px;
-            border: 2px solid #E2E8F0;
-            border-radius: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .pin-digit:focus {
-            outline: none;
-            border-color: #48BB78;
-            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
-        }
-        
-        .pin-connect-btn {
-            background: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
-            border: none;
-            color: white;
-            padding: 15px 40px;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
-        }
-        
-        .pin-connect-btn:disabled {
-            background: #CBD5E0;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-        
-        .pin-error {
-            color: #FC8181;
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
-        }
-        
-        .pin-error.show {
-            display: block;
-        }
-        
-        /* Hidden */
-        .hidden {
-            display: none !important;
-        }
-        
-        /* Toast Notification */
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background: #2D3748;
+            background: rgba(0, 0, 0, 0.8);
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
+            padding: 12px 24px;
+            border-radius: 25px;
             font-size: 14px;
+            z-index: 10001;
             opacity: 0;
             transition: opacity 0.3s;
-            z-index: 1000;
         }
         
         .toast.show {
             opacity: 1;
         }
-        
-        /* Alarm Overlay */
-        .alarm-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-        
-        .alarm-overlay.active {
-            display: flex;
-        }
-        
-        .alarm-content {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            max-width: 90%;
-        }
-        
-        .alarm-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: ring 1s infinite;
-        }
-        
-        @keyframes ring {
-            0%, 100% { transform: rotate(-15deg); }
-            50% { transform: rotate(15deg); }
-        }
-        
-        .alarm-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2D3748;
-            margin-bottom: 10px;
-        }
-        
-        .alarm-message {
-            font-size: 16px;
-            color: #4A5568;
-            margin-bottom: 30px;
-        }
-        
-        .alarm-stop-btn {
-            background: linear-gradient(135deg, #FC8181 0%, #F56565 100%);
-            border: none;
-            color: white;
-            padding: 20px 60px;
-            border-radius: 50px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(252, 129, 129, 0.4);
-        }
-        
-        .alarm-stop-btn:active {
-            transform: scale(0.95);
-        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="app-title">🎒 학원가자</div>
-            <div class="app-subtitle" id="childNameDisplay">학생용</div>
+    <div class="page-wrapper">
+        <!-- Left Ad Sidebar -->
+        <div class="ad-sidebar">
+            <div class="ad-box">
+                광고 영역<br>
+                (Google AdSense)
+            </div>
         </div>
         
-        <!-- Main Content -->
-        <div class="main-content">
+        <!-- Main App -->
+        <div class="app-container">
             <!-- PIN Setup Screen -->
-            <div id="pinSetup" class="pin-setup">
-                <div class="pin-setup-content">
-                    <div class="pin-setup-icon">🔗</div>
-                    <div class="pin-setup-title">부모님과 연결하기</div>
-                    <div class="pin-setup-subtitle">
-                        부모님께 받은 6자리 PIN을 입력하세요
+            <div id="pinSetup" class="pin-setup active">
+                <div class="pin-content">
+                    <div class="pin-icon">🎓</div>
+                    <div class="pin-title">학원가자 연결</div>
+                    <div class="pin-description">
+                        부모님이 알려준 6자리 PIN을<br>
+                        입력해주세요
                     </div>
-                    
-                    <div class="pin-input-container">
-                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin1" oninput="movePinFocus(this, 1)">
-                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin2" oninput="movePinFocus(this, 2)">
-                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin3" oninput="movePinFocus(this, 3)">
-                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin4" oninput="movePinFocus(this, 4)">
-                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin5" oninput="movePinFocus(this, 5)">
-                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin6" oninput="movePinFocus(this, 6)">
+                    <div class="pin-inputs">
+                        <input type="tel" class="pin-input" id="pin1" maxlength="1" onkeyup="handlePinInput(1)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <input type="tel" class="pin-input" id="pin2" maxlength="1" onkeyup="handlePinInput(2)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <input type="tel" class="pin-input" id="pin3" maxlength="1" onkeyup="handlePinInput(3)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <input type="tel" class="pin-input" id="pin4" maxlength="1" onkeyup="handlePinInput(4)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <input type="tel" class="pin-input" id="pin5" maxlength="1" onkeyup="handlePinInput(5)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <input type="tel" class="pin-input" id="pin6" maxlength="1" onkeyup="handlePinInput(6)" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                     </div>
-                    
-                    <button class="pin-connect-btn" id="connectBtn" onclick="connectWithPin()">
-                        연결하기
-                    </button>
-                    
-                    <div class="pin-error" id="pinError">
-                        PIN이 일치하지 않습니다. 다시 확인해주세요.
-                    </div>
+                    <div class="pin-error" id="pinError">PIN이 일치하지 않습니다</div>
+                    <button class="connect-btn" id="connectBtn" onclick="connectWithPIN()">연결하기</button>
                 </div>
             </div>
             
             <!-- Loading State -->
-            <div id="loadingState" class="loading">
-                데이터를 불러오는 중...
+            <div id="loadingState" class="loading-state hidden">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">데이터 불러오는 중...</div>
             </div>
             
             <!-- Main App -->
             <div id="mainApp" class="hidden">
-                <!-- Points Display -->
-                <div class="points-section">
-                    <div class="points-display" id="pointsDisplay">0P</div>
-                    <div class="points-label">모은 포인트</div>
+                <div class="header">
+                    <div class="app-title">🎓 학원가자</div>
+                    <div class="app-subtitle" id="childNameDisplay">학생님</div>
                 </div>
                 
-                <!-- Stats -->
-                <div class="stats-section">
-                    <div class="stat-card">
-                        <div class="stat-value" id="attendanceRate">0%</div>
-                        <div class="stat-label">출석률</div>
+                <div class="main-content">
+                    <!-- Points Section -->
+                    <div class="points-section">
+                        <div class="points-display" id="pointsDisplay">0 🌟</div>
+                        <div class="points-label">누적 포인트</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="streakDays">0일</div>
-                        <div class="stat-label">연속 출석</div>
+                    
+                    <!-- Today's Schedule -->
+                    <div class="schedule-section">
+                        <div class="section-title">📅 오늘의 학원</div>
+                        <div id="todaySchedule">
+                            <div class="empty-state">
+                                <div class="empty-icon">📚</div>
+                                <div class="empty-text">오늘은 학원이 없어요!</div>
+                                <div class="empty-subtext">편안한 하루 보내세요 😊</div>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <!-- Stamp Cards -->
+                    <div id="stampCards"></div>
                 </div>
-                
-                <!-- Today's Schedule -->
-                <div class="schedule-section">
-                    <div class="section-title">📚 오늘의 학원</div>
-                    <div id="scheduleList"></div>
-                </div>
-                
-                <!-- Attendance Stamp Cards -->
-                <div class="stamp-cards" id="stampCards"></div>
-                
-                <!-- Rewards -->
-                <div class="rewards-section">
-                    <div class="section-title">🎁 받을 수 있는 보상</div>
-                    <div id="rewardsList"></div>
-                </div>
+            </div>
+        </div>
+        
+        <!-- Right Ad Sidebar -->
+        <div class="ad-sidebar">
+            <div class="ad-box">
+                광고 영역<br>
+                (Google AdSense)
+            </div>
+        </div>
+    </div>
+    
+    <!-- Alarm Overlay -->
+    <div id="alarmOverlay" class="alarm-overlay">
+        <div class="alarm-content">
+            <div class="alarm-icon">🔔</div>
+            <div class="alarm-title" id="alarmTitle">학원 갈 시간!</div>
+            <div class="alarm-message" id="alarmMessage">준비해서 출발하세요!</div>
+            <div class="alarm-buttons">
+                <button class="alarm-btn snooze-btn" onclick="snoozeAlarm()">
+                    😴 3분 뒤<br>다시 알림
+                </button>
+                <button class="alarm-btn stop-btn" onclick="stopAlarm()">
+                    ✋ 알람 끄기
+                </button>
             </div>
         </div>
     </div>
     
     <!-- Toast -->
     <div id="toast" class="toast"></div>
-    
-    <!-- Alarm Overlay -->
-    <div id="alarmOverlay" class="alarm-overlay">
-        <div class="alarm-content">
-            <div class="alarm-icon">🔔</div>
-            <div class="alarm-title">학원 갈 시간이에요!</div>
-            <div class="alarm-message" id="alarmAcademyName"></div>
-            <button class="alarm-stop-btn" onclick="stopAlarm()">알람 끄기</button>
-        </div>
-    </div>
-    
-    <!-- Firebase SDK -->
+
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, updateDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-        import { getStorage, ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
-        
-        // Firebase 설정
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
         const firebaseConfig = {
-            apiKey: "AIzaSyCqsQ3GPkspxBiO-5qQnc8MhliCNZZ7sks",
-            authDomain: "hakwongaja.firebaseapp.com",
-            projectId: "hakwongaja",
-            storageBucket: "hakwongaja.firebasestorage.app",
-            messagingSenderId: "789429857818",
-            appId: "1:789429857818:web:f526c57530a59f8395aba3",
-            measurementId: "G-JG7S5Z6FG8"
+            apiKey: "AIzaSyDGBPC7zjo4T7i5vsEHN-Fd3MHVJMxWQNE",
+            authDomain: "hakwon-gaja.firebaseapp.com",
+            projectId: "hakwon-gaja",
+            storageBucket: "hakwon-gaja.firebasestorage.app",
+            messagingSenderId: "720074846489",
+            appId: "1:720074846489:web:1df6f10d39d94b24f1f7a8"
         };
-        
-        // Firebase 초기화
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
+
+        window.db = db;
+        window.auth = auth;
+        window.getDoc = getDoc;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.onSnapshot = onSnapshot;
+        window.collection = collection;
+        window.getDocs = getDocs;
+
+        // Auto sign in
+        signInAnonymously(auth).catch(console.error);
         
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.currentUser = user;
+            }
+        });
+    </script>
+
+    <script>
         let currentUser = null;
         let appData = null;
         let childData = null;
         let childId = null;
         let parentUserId = null;
-        let currentPosition = null;
-        let watchId = null;
-        let alarmInterval = null;
-        let currentAlarmAcademy = null;
+        let alarmAudio = null;
+        let voiceAudio = null;
+        let activeAlarm = null;
+        let snoozeTimeout = null;
         
-        // 한국 공휴일 데이터 (2026-2027)
-        const koreanHolidays = {
-            // 2026년
-            '2026-01-01': '신정',
-            '2026-01-31': '설날 연휴',
-            '2026-02-01': '설날 연휴',
-            '2026-02-02': '설날',
-            '2026-03-01': '삼일절',
-            '2026-05-05': '어린이날',
-            '2026-05-24': '석가탄신일',
-            '2026-06-06': '현충일',
-            '2026-08-15': '광복절',
-            '2026-09-26': '추석 연휴',
-            '2026-09-27': '추석 연휴',
-            '2026-09-28': '추석',
-            '2026-10-03': '개천절',
-            '2026-10-09': '한글날',
-            '2026-12-25': '성탄절',
-            
-            // 2027년
-            '2027-01-01': '신정',
-            '2027-02-19': '설날 연휴',
-            '2027-02-20': '설날',
-            '2027-02-21': '설날 연휴',
-            '2027-03-01': '삼일절',
-            '2027-05-05': '어린이날',
-            '2027-05-13': '석가탄신일',
-            '2027-06-06': '현충일',
-            '2027-08-15': '광복절',
-            '2027-10-03': '개천절',
-            '2027-10-06': '추석 연휴',
-            '2027-10-07': '추석',
-            '2027-10-08': '추석 연휴',
-            '2027-10-09': '한글날',
-            '2027-12-25': '성탄절'
-        };
+        // Public Holidays 2026-2027
+        const holidays = [
+            '2026-01-01', '2026-02-16', '2026-02-17', '2026-02-18',
+            '2026-03-01', '2026-05-05', '2026-05-24', '2026-06-06',
+            '2026-08-15', '2026-09-26', '2026-09-27', '2026-09-28',
+            '2026-10-03', '2026-10-09', '2026-12-25',
+            '2027-01-01', '2027-02-06', '2027-02-07', '2027-02-08',
+            '2027-03-01', '2027-05-05', '2027-05-13', '2027-06-06',
+            '2027-08-15', '2027-09-15', '2027-09-16', '2027-09-17',
+            '2027-10-03', '2027-10-09', '2027-12-25'
+        ];
         
-        // Get child ID from localStorage
-        childId = localStorage.getItem('childId');
-        parentUserId = localStorage.getItem('parentUserId');
+        // Check if logged in
+        const savedChildId = localStorage.getItem('childId');
+        const savedParentUserId = localStorage.getItem('parentUserId');
         
-        // Initialize
-        window.addEventListener('DOMContentLoaded', () => {
-            // Check if already connected
-            if (childId && parentUserId) {
-                // Already connected, load data
-                initAuth();
-            } else {
-                // Show PIN setup
-                document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('pinSetup').classList.add('active');
+        if (savedChildId && savedParentUserId) {
+            childId = savedChildId;
+            parentUserId = savedParentUserId;
+            document.getElementById('pinSetup').classList.remove('active');
+            document.getElementById('loadingState').classList.remove('hidden');
+        }
+        
+        // PIN Input Handler
+        function handlePinInput(num) {
+            const input = document.getElementById(`pin${num}`);
+            if (input.value && num < 6) {
+                document.getElementById(`pin${num + 1}`).focus();
             }
-            
-            requestNotificationPermission();
-            checkAlarms();
-        });
-        
-        // PIN input auto-focus
-        window.movePinFocus = function(input, position) {
-            // Only allow numbers
-            input.value = input.value.replace(/[^0-9]/g, '');
-            
-            // Auto-focus next input
-            if (input.value && position < 6) {
-                document.getElementById(`pin${position + 1}`).focus();
-            }
-            
-            // Check if all 6 digits are entered
-            const allFilled = [1,2,3,4,5,6].every(i => 
-                document.getElementById(`pin${i}`).value
-            );
-            
-            document.getElementById('connectBtn').disabled = !allFilled;
         }
         
         // Connect with PIN
-        window.connectWithPin = async function() {
-            const pin = [1,2,3,4,5,6].map(i => 
-                document.getElementById(`pin${i}`).value
-            ).join('');
+        async function connectWithPIN() {
+            const pin = [1,2,3,4,5,6].map(i => document.getElementById(`pin${i}`).value).join('');
             
             if (pin.length !== 6) {
+                alert('6자리 PIN을 모두 입력해주세요!');
                 return;
             }
             
-            document.getElementById('pinError').classList.remove('show');
             document.getElementById('connectBtn').disabled = true;
             document.getElementById('connectBtn').textContent = '연결 중...';
+            document.getElementById('pinError').classList.remove('show');
             
             try {
-                // Sign in anonymously to access Firebase
-                await signInAnonymously(auth);
-                
-                // Search for user with this PIN
-                const usersRef = collection(db, 'users');
-                const snapshot = await getDocs(usersRef);
-                
+                // Search all users
+                const usersSnapshot = await getDocs(collection(db, 'users'));
                 let found = false;
                 
-                for (const userDoc of snapshot.docs) {
-                    const userData = userDoc.data();
-                    const matchedChild = userData.children?.find(c => c.pin === pin);
-                    
-                    if (matchedChild) {
-                        // Found matching PIN!
-                        childId = matchedChild.id;
-                        parentUserId = userDoc.id;
-                        
-                        // Save to localStorage
-                        localStorage.setItem('childId', childId);
-                        localStorage.setItem('parentUserId', parentUserId);
-                        
-                        found = true;
-                        
-                        // Hide PIN screen, show app
-                        document.getElementById('pinSetup').classList.remove('active');
-                        document.getElementById('loadingState').classList.remove('hidden');
-                        
-                        // Load user data
-                        loadUserData(parentUserId);
-                        startLocationTracking();
-                        
-                        break;
+                for (const userDoc of usersSnapshot.docs) {
+                    const data = userDoc.data();
+                    if (data.children) {
+                        for (const child of data.children) {
+                            if (child.pin === pin) {
+                                childId = child.id;
+                                parentUserId = userDoc.id;
+                                
+                                localStorage.setItem('childId', childId);
+                                localStorage.setItem('parentUserId', parentUserId);
+                                
+                                found = true;
+                                
+                                document.getElementById('pinSetup').classList.remove('active');
+                                document.getElementById('loadingState').classList.remove('hidden');
+                                
+                                loadUserData(parentUserId);
+                                
+                                break;
+                            }
+                        }
                     }
+                    if (found) break;
                 }
                 
                 if (!found) {
-                    // PIN not found
                     document.getElementById('pinError').classList.add('show');
                     document.getElementById('connectBtn').disabled = false;
                     document.getElementById('connectBtn').textContent = '연결하기';
                     
-                    // Clear PIN inputs
                     [1,2,3,4,5,6].forEach(i => {
                         document.getElementById(`pin${i}`).value = '';
                     });
@@ -836,28 +793,11 @@
             }
         }
         
-        // Auth
-        function initAuth() {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user;
-                    if (parentUserId) {
-                        loadUserData(parentUserId);
-                    }
-                } else {
-                    signInAnonymously(auth).catch((error) => {
-                        console.error('Auth error:', error);
-                    });
-                }
-            });
-        }
-        
-        // Load data from Firestore
+        // Load User Data
         async function loadUserData(userId) {
             try {
                 const userDoc = doc(db, 'users', userId);
                 
-                // Real-time listener
                 onSnapshot(userDoc, (docSnapshot) => {
                     if (docSnapshot.exists()) {
                         appData = docSnapshot.data();
@@ -875,6 +815,7 @@
                     document.getElementById('mainApp').classList.remove('hidden');
                     
                     render();
+                    checkAlarms();
                 });
             } catch (error) {
                 console.error('Load error:', error);
@@ -882,115 +823,85 @@
             }
         }
         
-        // Save data
-        async function saveData() {
-            try {
-                const userId = localStorage.getItem('parentUserId') || currentUser.uid;
-                const userDoc = doc(db, 'users', userId);
-                await setDoc(userDoc, appData);
-            } catch (error) {
-                console.error('Save error:', error);
-                showToast('저장 중 오류가 발생했습니다.');
-            }
-        }
-        
-        // Notification Permission
-        function requestNotificationPermission() {
-            if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
-            }
-        }
-        
-        // Location Tracking
-        function startLocationTracking() {
-            if ('geolocation' in navigator) {
-                watchId = navigator.geolocation.watchPosition(
-                    (position) => {
-                        currentPosition = {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
-                        };
-                        
-                        checkDistanceToAcademies();
-                    },
-                    (error) => {
-                        console.error('Location error:', error);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
-                    }
-                );
-            }
-        }
-        
-        // Calculate distance
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; // Earth radius in meters
-            const φ1 = lat1 * Math.PI / 180;
-            const φ2 = lat2 * Math.PI / 180;
-            const Δφ = (lat2 - lat1) * Math.PI / 180;
-            const Δλ = (lon2 - lon1) * Math.PI / 180;
+        // Render
+        function render() {
+            if (!childData) return;
             
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                    Math.cos(φ1) * Math.cos(φ2) *
-                    Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            // Update points
+            document.getElementById('pointsDisplay').textContent = `${childData.points || 0} 🌟`;
             
-            return R * c; // Distance in meters
+            // Render today's schedule
+            renderTodaySchedule();
+            
+            // Render stamp cards
+            renderStampCards();
         }
         
-        // Check distance to academies
-        function checkDistanceToAcademies() {
-            if (!currentPosition || !childData) return;
+        // Render Today's Schedule
+        function renderTodaySchedule() {
+            const container = document.getElementById('todaySchedule');
+            const today = new Date();
+            const todayDay = today.getDay();
+            const todayStr = today.toISOString().split('T')[0];
             
-            const todayAcademies = getTodayAcademies();
+            // Check if today is holiday
+            if (holidays.includes(todayStr)) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎉</div>
+                        <div class="empty-text">오늘은 공휴일이에요!</div>
+                        <div class="empty-subtext">편안한 하루 보내세요 😊</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const todayAcademies = childData.academies?.filter(a => a.days.includes(todayDay)) || [];
+            
+            if (todayAcademies.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📚</div>
+                        <div class="empty-text">오늘은 학원이 없어요!</div>
+                        <div class="empty-subtext">편안한 하루 보내세요 😊</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
             
             todayAcademies.forEach(academy => {
-                if (academy.latitude && academy.longitude) {
-                    const distance = calculateDistance(
-                        currentPosition.latitude,
-                        currentPosition.longitude,
-                        academy.latitude,
-                        academy.longitude
-                    );
-                    
-                    academy.distance = Math.round(distance);
-                }
+                const isChecked = academy.attendanceHistory?.some(h => 
+                    h.date === todayStr && h.departureTime
+                );
+                
+                html += `
+                    <div class="academy-item">
+                        <div class="academy-header">
+                            <div>
+                                <div class="academy-name">${academy.name}</div>
+                                <div class="academy-time">🚪 ${academy.departureTime} 출발 • 📚 ${academy.classTime} 수업</div>
+                            </div>
+                        </div>
+                        <button class="check-btn ${isChecked ? 'checked' : ''}" 
+                                onclick="checkIn('${academy.id}')" 
+                                ${isChecked ? 'disabled' : ''}>
+                            ${isChecked ? '✅ 출발 완료!' : '🏃 출발 체크'}
+                        </button>
+                    </div>
+                `;
             });
             
-            render();
+            container.innerHTML = html;
         }
         
-        // Get today academies
-        function getTodayAcademies() {
-            if (!childData) return [];
-            
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
-            const today = days[new Date().getDay()];
-            
-            return childData.academies.filter(academy => 
-                academy.days.includes(today)
-            );
-        }
-        
-        // Check in (depart)
+        // Check In
         window.checkIn = async function(academyId) {
             const academy = childData.academies.find(a => a.id === academyId);
             if (!academy) return;
             
             const today = new Date().toISOString().split('T')[0];
-            
-            // Check if already checked in
-            const alreadyCheckedIn = academy.attendanceHistory?.some(h => 
-                h.date === today && h.departureTime
-            );
-            
-            if (alreadyCheckedIn) {
-                showToast('이미 출발 체크를 했어요!');
-                return;
-            }
             
             // Add points
             childData.points += 10;
@@ -1000,225 +911,286 @@
                 academy.attendanceHistory = [];
             }
             
-            const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            
             academy.attendanceHistory.push({
                 date: today,
-                departureTime: timeStr,
-                status: 'departed'
+                departureTime: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+                status: 'attended'
             });
             
+            // Save
             await saveData();
             
-            // Play voice alarm
-            await playVoiceAlarms(academy);
+            // Show celebration
+            showCelebration();
             
-            showToast('✅ 출발 확인! +10P');
-        }
+            render();
+        };
         
-        // Arrive at academy
-        window.arriveAcademy = async function(academyId) {
-            const academy = childData.academies.find(a => a.id === academyId);
-            if (!academy) return;
+        // Render Stamp Cards
+        function renderStampCards() {
+            const container = document.getElementById('stampCards');
             
-            const today = new Date().toISOString().split('T')[0];
-            const attendance = academy.attendanceHistory?.find(h => h.date === today);
-            
-            if (!attendance) {
-                showToast('먼저 출발 체크를 해주세요!');
+            if (!childData.academies || childData.academies.length === 0) {
+                container.innerHTML = '';
                 return;
             }
             
-            if (attendance.arrivalTime) {
-                showToast('이미 도착 체크를 했어요!');
-                return;
-            }
+            let html = '';
             
-            // Calculate points based on arrival time
-            const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            const classTime = new Date(`2000-01-01 ${academy.classTime}`);
-            const arrivalTime = new Date(`2000-01-01 ${timeStr}`);
-            const diffMinutes = (classTime - arrivalTime) / 1000 / 60;
-            
-            let points = 5;
-            if (diffMinutes >= 30) points = 15;
-            else if (diffMinutes >= 15) points = 12;
-            else if (diffMinutes >= 10) points = 10;
-            else if (diffMinutes >= 5) points = 7;
-            
-            childData.points += points;
-            attendance.arrivalTime = timeStr;
-            attendance.points = points;
-            attendance.status = 'attended';
-            
-            await saveData();
-            showToast(`🎉 도착 확인! +${points}P`);
-        }
-        
-        // Play voice alarms
-        async function playVoiceAlarms(academy) {
-            if (!academy.voiceAlarms) return;
-            
-            const alarms = [];
-            
-            // Always play basic alarm
-            if (academy.voiceAlarms.basic) {
-                alarms.push(academy.voiceAlarms.basic);
-            }
-            
-            // Check weather
-            const weather = await checkWeather();
-            if (weather && weather.rainProbability >= 60 && academy.voiceAlarms.rain) {
-                alarms.push(academy.voiceAlarms.rain);
-            }
-            
-            // Check air quality
-            const airQuality = await checkAirQuality();
-            if (airQuality && (airQuality.pm10 >= 81 || airQuality.pm25 >= 36) && academy.voiceAlarms.dust) {
-                alarms.push(academy.voiceAlarms.dust);
-            }
-            
-            // Play alarms sequentially
-            for (const alarmUrl of alarms) {
-                await playAudio(alarmUrl);
-            }
-        }
-        
-        // Play audio
-        function playAudio(url) {
-            return new Promise((resolve) => {
-                const audio = new Audio(url);
-                audio.onended = resolve;
-                audio.onerror = resolve;
-                audio.play();
+            childData.academies.forEach(academy => {
+                const recentAttendance = getRecentAttendance(academy, 14);
+                const streak = calculateStreak(academy);
+                
+                html += `
+                    <div class="stamp-card">
+                        <div class="stamp-header">
+                            <div class="stamp-title">${academy.name} 출석부</div>
+                            ${streak > 0 ? `<div class="streak-badge">🔥 ${streak}일 연속!</div>` : ''}
+                        </div>
+                        <div class="stamp-grid">
+                `;
+                
+                for (let i = 0; i < 14; i++) {
+                    const attended = i < recentAttendance.length && recentAttendance[i];
+                    html += `
+                        <div class="stamp-cell ${attended ? 'filled' : ''}">
+                            ${attended ? '🎉' : ''}
+                        </div>
+                    `;
+                }
+                
+                html += `
+                        </div>
+                    </div>
+                `;
             });
+            
+            container.innerHTML = html;
         }
         
-        // Check weather (mock - TODO: implement real API)
-        async function checkWeather() {
-            // TODO: Implement 기상청 API
-            return {
-                rainProbability: 30,
-                temperature: 20
-            };
+        // Get Recent Attendance
+        function getRecentAttendance(academy, days) {
+            if (!academy.attendanceHistory) return [];
+            
+            const today = new Date();
+            const attendance = [];
+            
+            for (let i = days - 1; i >= 0; i--) {
+                const checkDate = new Date(today);
+                checkDate.setDate(today.getDate() - i);
+                const dateStr = checkDate.toISOString().split('T')[0];
+                const dayOfWeek = checkDate.getDay();
+                
+                // Skip if not academy day or holiday
+                if (!academy.days.includes(dayOfWeek) || holidays.includes(dateStr)) {
+                    continue;
+                }
+                
+                const attended = academy.attendanceHistory.some(h => 
+                    h.date === dateStr && h.status === 'attended'
+                );
+                
+                attendance.push(attended);
+            }
+            
+            return attendance;
         }
         
-        // Check air quality (mock - TODO: implement real API)
-        async function checkAirQuality() {
-            // TODO: Implement 환경공단 API
-            return {
-                pm10: 50,
-                pm25: 25
-            };
+        // Calculate Streak
+        function calculateStreak(academy) {
+            if (!academy.attendanceHistory) return 0;
+            
+            const today = new Date();
+            let streak = 0;
+            
+            for (let i = 0; i < 30; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(today.getDate() - i);
+                const dateStr = checkDate.toISOString().split('T')[0];
+                const dayOfWeek = checkDate.getDay();
+                
+                // Skip if not academy day or holiday
+                if (!academy.days.includes(dayOfWeek) || holidays.includes(dateStr)) {
+                    continue;
+                }
+                
+                const attended = academy.attendanceHistory.some(h => 
+                    h.date === dateStr && h.status === 'attended'
+                );
+                
+                if (attended) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
         }
         
-        // Check alarms
+        // Check Alarms
         function checkAlarms() {
+            if (!childData || !childData.academies) return;
+            
             setInterval(() => {
                 const now = new Date();
-                const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                const todayDay = now.getDay();
+                const todayStr = now.toISOString().split('T')[0];
                 
-                const todayAcademies = getTodayAcademies();
+                // Skip if holiday
+                if (holidays.includes(todayStr)) return;
                 
-                todayAcademies.forEach(academy => {
-                    if (academy.departureTime === currentTime) {
-                        const alarmKey = `alarm_${academy.id}_${currentTime}`;
-                        const lastAlert = localStorage.getItem(alarmKey);
-                        const today = new Date().toDateString();
+                childData.academies.forEach(academy => {
+                    if (academy.days.includes(todayDay) && academy.departureTime === currentTime) {
+                        // Check if already alerted today
+                        const alreadyAlerted = academy.attendanceHistory?.some(h => 
+                            h.date === todayStr
+                        );
                         
-                        if (lastAlert !== today) {
-                            showAlarmNotification(academy);
-                            localStorage.setItem(alarmKey, today);
+                        if (!alreadyAlerted) {
+                            showAlarm(academy);
                         }
                     }
                 });
-            }, 60000); // Check every minute
+            }, 30000); // Check every 30 seconds
         }
         
-        // Show alarm notification
-        async function showAlarmNotification(academy) {
-            currentAlarmAcademy = academy;
+        // Show Alarm
+        async function showAlarm(academy) {
+            activeAlarm = academy;
             
-            // Show alarm overlay
-            document.getElementById('alarmAcademyName').textContent = academy.name;
+            document.getElementById('alarmTitle').textContent = `${academy.name} 갈 시간!`;
+            document.getElementById('alarmMessage').textContent = `${academy.departureTime}에 출발해야 해요!`;
             document.getElementById('alarmOverlay').classList.add('active');
             
-            // Start alarm cycle
-            await playAlarmCycle(academy);
+            // Play chime sound (딩~동~댕~)
+            await playChime();
             
-            // Set up snooze (repeat every 3 minutes)
-            alarmInterval = setInterval(async () => {
-                await playAlarmCycle(academy);
-            }, 3 * 60 * 1000); // 3 minutes
-        }
-        
-        // Play full alarm cycle
-        async function playAlarmCycle(academy) {
-            // 1. Play soft chime bell
-            await playSoftChime();
-            
-            // Small pause
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // 2. Play voice alarms
-            await playVoiceAlarms(academy);
-            
-            // Browser notification
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('🎒 학원가자!', {
-                    body: `${academy.name} 출발 시간이에요!`,
-                    icon: 'icon-192.png'
-                });
+            // If chime-voice type, play voice after chime
+            if (academy.alarmType === 'chime-voice' && academy.basicVoiceUrl) {
+                setTimeout(async () => {
+                    await playVoiceAlarm(academy.basicVoiceUrl);
+                    
+                    // Then check weather alarms
+                    await playWeatherAlarms();
+                }, 2000);
+            } else if (academy.alarmType === 'chime-only') {
+                // For chime-only, still check weather alarms
+                setTimeout(async () => {
+                    await playWeatherAlarms();
+                }, 2000);
             }
         }
         
-        // Stop alarm
-        window.stopAlarm = function() {
-            if (alarmInterval) {
-                clearInterval(alarmInterval);
-                alarmInterval = null;
-            }
-            
-            document.getElementById('alarmOverlay').classList.remove('active');
-            currentAlarmAcademy = null;
-        }
-        
-        // Play soft chime bell (Web Audio API)
-        async function playSoftChime() {
+        // Play Chime (딩~동~댕~)
+        async function playChime() {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             
-            // Play 3 gentle tones: ding~ dong~ dang~
-            const frequencies = [880, 660, 440]; // A5, E5, A4
-            const duration = 0.4;
-            
-            for (let i = 0; i < frequencies.length; i++) {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Soft sine wave
-                oscillator.type = 'sine';
-                oscillator.frequency.value = frequencies[i];
-                
-                // Gentle envelope
-                const now = audioContext.currentTime;
-                gainNode.gain.setValueAtTime(0, now);
-                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
-                
-                oscillator.start(now);
-                oscillator.stop(now + duration);
-                
-                // Wait between tones
-                await new Promise(resolve => setTimeout(resolve, duration * 1000 + 100));
+            async function playTone(frequency, duration, delay) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.value = frequency;
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + duration);
+                        
+                        setTimeout(resolve, duration * 1000);
+                    }, delay);
+                });
             }
+            
+            // 딩~ (E)
+            await playTone(659.25, 0.5, 0);
+            // 동~ (C)
+            await playTone(523.25, 0.5, 300);
+            // 댕~ (G)
+            await playTone(783.99, 0.8, 300);
         }
         
-        // Show toast
+        // Play Voice Alarm
+        async function playVoiceAlarm(url) {
+            return new Promise((resolve) => {
+                if (voiceAudio) {
+                    voiceAudio.pause();
+                }
+                
+                voiceAudio = new Audio(url);
+                voiceAudio.onended = resolve;
+                voiceAudio.play().catch(console.error);
+            });
+        }
+        
+        // Play Weather Alarms
+        async function playWeatherAlarms() {
+            if (!appData || !appData.globalSettings || !appData.globalSettings.weatherAlarms) return;
+            
+            const weatherAlarms = appData.globalSettings.weatherAlarms;
+            
+            // TODO: API 연동 시 실제 날씨 데이터로 체크
+            // 현재는 설정만 확인
+            
+            // Rain alarm (예시: 비 오는 경우)
+            // const isRaining = await checkWeatherAPI();
+            // if (isRaining && weatherAlarms.rain.enabled && weatherAlarms.rain.voiceUrl) {
+            //     await playVoiceAlarm(weatherAlarms.rain.voiceUrl);
+            // }
+            
+            // Dust alarm (예시: 미세먼지 나쁨)
+            // const isDusty = await checkAirQualityAPI();
+            // if (isDusty && weatherAlarms.dust.enabled && weatherAlarms.dust.voiceUrl) {
+            //     await playVoiceAlarm(weatherAlarms.dust.voiceUrl);
+            // }
+        }
+        
+        // Snooze Alarm
+        function snoozeAlarm() {
+            document.getElementById('alarmOverlay').classList.remove('active');
+            
+            if (voiceAudio) {
+                voiceAudio.pause();
+            }
+            
+            showToast('3분 후 다시 알려드릴게요!');
+            
+            snoozeTimeout = setTimeout(() => {
+                if (activeAlarm) {
+                    showAlarm(activeAlarm);
+                }
+            }, 3 * 60 * 1000);
+        }
+        
+        // Stop Alarm
+        function stopAlarm() {
+            document.getElementById('alarmOverlay').classList.remove('active');
+            
+            if (voiceAudio) {
+                voiceAudio.pause();
+            }
+            
+            if (snoozeTimeout) {
+                clearTimeout(snoozeTimeout);
+            }
+            
+            activeAlarm = null;
+        }
+        
+        // Show Celebration
+        function showCelebration() {
+            showToast('🎉 출발 체크 완료! +10 포인트');
+        }
+        
+        // Show Toast
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1229,330 +1201,25 @@
             }, 3000);
         }
         
-        // Render
-        function render() {
-            renderPoints();
-            renderStats();
-            renderSchedule();
-            renderStampCards();
-            renderRewards();
+        // Save Data
+        async function saveData() {
+            try {
+                const userDoc = doc(db, 'users', parentUserId);
+                await setDoc(userDoc, appData);
+            } catch (error) {
+                console.error('Save error:', error);
+            }
         }
         
-        function renderPoints() {
-            document.getElementById('pointsDisplay').textContent = 
-                childData ? `${childData.points}P` : '0P';
-        }
-        
-        function renderStats() {
-            if (!childData) return;
-            
-            // Calculate attendance rate
-            let totalScheduled = 0;
-            let totalAttended = 0;
-            
-            childData.academies.forEach(academy => {
-                if (academy.attendanceHistory) {
-                    const scheduled = academy.attendanceHistory.filter(h => 
-                        academy.days.includes(new Date(h.date).getDay())
-                    ).length;
-                    const attended = academy.attendanceHistory.filter(h => 
-                        h.status === 'attended'
-                    ).length;
-                    
-                    totalScheduled += scheduled;
-                    totalAttended += attended;
+        // Start the app
+        if (savedChildId && savedParentUserId) {
+            // Wait for auth
+            setTimeout(() => {
+                if (currentUser) {
+                    loadUserData(parentUserId);
                 }
-            });
-            
-            const attendanceRate = totalScheduled > 0 
-                ? Math.round((totalAttended / totalScheduled) * 100) 
-                : 0;
-            
-            document.getElementById('attendanceRate').textContent = `${attendanceRate}%`;
-            
-            // Calculate streak
-            // TODO: Implement streak calculation
-            document.getElementById('streakDays').textContent = '0일';
+            }, 1000);
         }
-        
-        function renderSchedule() {
-            const container = document.getElementById('scheduleList');
-            const todayAcademies = getTodayAcademies();
-            
-            if (todayAcademies.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🎉</div>
-                        <div class="empty-text">오늘은 학원이 없어요!</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            const today = new Date().toISOString().split('T')[0];
-            
-            container.innerHTML = todayAcademies.map(academy => {
-                const attendance = academy.attendanceHistory?.find(h => h.date === today);
-                const hasDeparted = attendance && attendance.departureTime;
-                const hasArrived = attendance && attendance.arrivalTime;
-                
-                const canArrive = hasDeparted && !hasArrived && 
-                                 academy.distance && academy.distance <= 100;
-                
-                return `
-                    <div class="academy-item ${canArrive ? 'active' : ''}">
-                        <div class="academy-name">${academy.name}</div>
-                        <div class="academy-time">🏃 출발: ${academy.departureTime}</div>
-                        <div class="academy-time">📖 수업: ${academy.classTime}</div>
-                        
-                        ${academy.distance ? `
-                            <div class="distance-info">
-                                📍 학원까지 ${academy.distance}m
-                            </div>
-                        ` : ''}
-                        
-                        <div class="action-section">
-                            <button class="action-btn depart-btn" 
-                                    onclick="checkIn('${academy.id}')"
-                                    ${hasDeparted ? 'disabled' : ''}>
-                                ${hasDeparted ? '✅ 출발 완료' : '🏃 출발하기 (+10P)'}
-                            </button>
-                            
-                            <button class="action-btn arrive-btn" 
-                                    onclick="arriveAcademy('${academy.id}')"
-                                    ${!canArrive ? 'disabled' : ''}>
-                                ${hasArrived ? '✅ 도착 완료' : 
-                                  canArrive ? '📍 도착 체크' : '🔒 학원 근처에서 활성화'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        function renderStampCards() {
-            if (!childData || !childData.academies || childData.academies.length === 0) {
-                document.getElementById('stampCards').innerHTML = '';
-                return;
-            }
-            
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = today.getMonth();
-            const dayOfWeek = today.getDay(); // 0=일, 1=월, 2=화, 3=수, 4=목, 5=금, 6=토
-            
-            const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-            
-            let html = '';
-            
-            childData.academies.forEach(academy => {
-                if (!academy.days || academy.days.length === 0) return;
-                
-                // Calculate total sessions this month
-                const totalSessions = calculateMonthSessions(academy.days, year, month);
-                
-                // Calculate completed sessions
-                const completedSessions = calculateCompletedSessions(academy, year, month);
-                
-                // Calculate today's position
-                const todayPosition = calculateTodayPosition(academy.days, year, month);
-                
-                // Calculate streak
-                const streak = calculateStreak(academy);
-                
-                // Calculate percentage
-                const percentage = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
-                
-                // Get encouragement message
-                const message = getEncouragementMessage(percentage);
-                
-                // Generate stamps
-                let stamps = '';
-                for (let i = 0; i < totalSessions; i++) {
-                    let emoji = '⭕'; // Default: not yet
-                    let className = 'stamp';
-                    
-                    if (i < completedSessions) {
-                        emoji = '🎉'; // Completed
-                        className += ' completed';
-                    } else if (i === todayPosition) {
-                        emoji = '💫'; // Today
-                        className += ' today';
-                    }
-                    
-                    stamps += `<div class="${className}">${emoji}</div>`;
-                }
-                
-                // Days display
-                const daysText = academy.days.map(d => dayNames[d]).join('/');
-                
-                html += `
-                    <div class="stamp-card">
-                        <div class="stamp-header">
-                            <div class="stamp-title">📚 ${academy.name}</div>
-                            <div class="stamp-month">${month + 1}월 · ${daysText}</div>
-                        </div>
-                        <div class="stamps-grid">
-                            ${stamps}
-                        </div>
-                        <div class="stamp-stats">
-                            <div class="stamp-count">${completedSessions}/${totalSessions}회 출석</div>
-                            <div class="stamp-percentage">${percentage}% 달성</div>
-                            ${streak > 1 ? `<div class="stamp-streak">🔥 연속 ${streak}일 출석 중!</div>` : ''}
-                            ${message ? `<div class="stamp-message">${message}</div>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('stampCards').innerHTML = html;
-        }
-        
-        // Calculate total sessions in a month for given days
-        function calculateMonthSessions(days, year, month) {
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            let count = 0;
-            
-            for (let date = new Date(firstDay); date <= lastDay; date.setDate(date.getDate() + 1)) {
-                const dayOfWeek = date.getDay();
-                const dateStr = date.toISOString().split('T')[0];
-                
-                // 공휴일이 아니고 수업 요일인 경우만 카운트
-                if (days.includes(dayOfWeek) && !koreanHolidays[dateStr]) {
-                    count++;
-                }
-            }
-            
-            return count;
-        }
-        
-        // Calculate completed sessions
-        function calculateCompletedSessions(academy, year, month) {
-            if (!academy.attendanceHistory) return 0;
-            
-            let count = 0;
-            const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-            
-            academy.attendanceHistory.forEach(record => {
-                if (record.date.startsWith(monthStr) && record.status === 'attended') {
-                    count++;
-                }
-            });
-            
-            return count;
-        }
-        
-        // Calculate today's position in the month
-        function calculateTodayPosition(days, year, month) {
-            const today = new Date();
-            if (today.getFullYear() !== year || today.getMonth() !== month) {
-                return -1; // Not this month
-            }
-            
-            const todayDayOfWeek = today.getDay();
-            const todayStr = today.toISOString().split('T')[0];
-            
-            // 오늘이 공휴일이면 표시 안 함
-            if (koreanHolidays[todayStr]) {
-                return -1;
-            }
-            
-            if (!days.includes(todayDayOfWeek)) {
-                return -1; // Not a session day
-            }
-            
-            const firstDay = new Date(year, month, 1);
-            let position = 0;
-            
-            for (let date = new Date(firstDay); date < today; date.setDate(date.getDate() + 1)) {
-                const dayOfWeek = date.getDay();
-                const dateStr = date.toISOString().split('T')[0];
-                
-                // 공휴일이 아니고 수업 요일인 경우만 카운트
-                if (days.includes(dayOfWeek) && !koreanHolidays[dateStr]) {
-                    position++;
-                }
-            }
-            
-            return position;
-        }
-        
-        // Calculate attendance streak
-        function calculateStreak(academy) {
-            if (!academy.attendanceHistory || !academy.days) return 0;
-            
-            const today = new Date();
-            let streak = 0;
-            let checkDate = new Date(today);
-            
-            // Go backwards from today
-            for (let i = 0; i < 30; i++) { // Check last 30 days
-                const dayOfWeek = checkDate.getDay();
-                
-                if (academy.days.includes(dayOfWeek)) {
-                    const dateStr = checkDate.toISOString().split('T')[0];
-                    
-                    const attended = academy.attendanceHistory.some(h => 
-                        h.date === dateStr && h.status === 'attended'
-                    );
-                    
-                    if (attended) {
-                        streak++;
-                    } else {
-                        break; // Streak broken
-                    }
-                }
-                
-                checkDate.setDate(checkDate.getDate() - 1);
-            }
-            
-            return streak;
-        }
-        
-        // Get encouragement message based on percentage
-        function getEncouragementMessage(percentage) {
-            if (percentage >= 80) {
-                return '완벽해요! 🌟';
-            } else if (percentage >= 50) {
-                return '잘하고 있어요! 💪';
-            } else if (percentage > 0) {
-                return '힘내요! 💙';
-            }
-            return '';
-        }
-        
-        function renderRewards() {
-            const container = document.getElementById('rewardsList');
-            
-            if (!appData || appData.rewards.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🎁</div>
-                        <div class="empty-text">아직 보상이 없어요!</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = appData.rewards.map(reward => {
-                const canClaim = childData.points >= reward.points;
-                const shortage = reward.points - childData.points;
-                
-                return `
-                    <div class="reward-item">
-                        <div class="reward-info">
-                            <div class="reward-name">${reward.name}</div>
-                            <div class="reward-cost">${reward.points}P 필요</div>
-                        </div>
-                        <div class="reward-status ${canClaim ? 'available' : 'locked'}">
-                            ${canClaim ? '받을 수 있어요!' : `${shortage}P 부족`}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
     </script>
 </body>
 </html>

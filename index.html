@@ -324,6 +324,101 @@
             font-size: 16px;
         }
         
+        /* PIN Setup Screen */
+        .pin-setup {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .pin-setup.active {
+            display: flex;
+        }
+        
+        .pin-setup-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .pin-setup-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .pin-setup-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2D3748;
+            margin-bottom: 10px;
+        }
+        
+        .pin-setup-subtitle {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        
+        .pin-input-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .pin-digit {
+            width: 50px;
+            height: 60px;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pin-digit:focus {
+            outline: none;
+            border-color: #48BB78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+        
+        .pin-connect-btn {
+            background: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+        
+        .pin-connect-btn:disabled {
+            background: #CBD5E0;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        
+        .pin-error {
+            color: #FC8181;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .pin-error.show {
+            display: block;
+        }
+        
         /* Hidden */
         .hidden {
             display: none !important;
@@ -348,6 +443,72 @@
         .toast.show {
             opacity: 1;
         }
+        
+        /* Alarm Overlay */
+        .alarm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .alarm-overlay.active {
+            display: flex;
+        }
+        
+        .alarm-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 90%;
+        }
+        
+        .alarm-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: ring 1s infinite;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(15deg); }
+        }
+        
+        .alarm-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2D3748;
+            margin-bottom: 10px;
+        }
+        
+        .alarm-message {
+            font-size: 16px;
+            color: #4A5568;
+            margin-bottom: 30px;
+        }
+        
+        .alarm-stop-btn {
+            background: linear-gradient(135deg, #FC8181 0%, #F56565 100%);
+            border: none;
+            color: white;
+            padding: 20px 60px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(252, 129, 129, 0.4);
+        }
+        
+        .alarm-stop-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -360,6 +521,34 @@
         
         <!-- Main Content -->
         <div class="main-content">
+            <!-- PIN Setup Screen -->
+            <div id="pinSetup" class="pin-setup">
+                <div class="pin-setup-content">
+                    <div class="pin-setup-icon">🔗</div>
+                    <div class="pin-setup-title">부모님과 연결하기</div>
+                    <div class="pin-setup-subtitle">
+                        부모님께 받은 6자리 PIN을 입력하세요
+                    </div>
+                    
+                    <div class="pin-input-container">
+                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin1" oninput="movePinFocus(this, 1)">
+                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin2" oninput="movePinFocus(this, 2)">
+                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin3" oninput="movePinFocus(this, 3)">
+                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin4" oninput="movePinFocus(this, 4)">
+                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin5" oninput="movePinFocus(this, 5)">
+                        <input type="text" class="pin-digit" maxlength="1" pattern="[0-9]" id="pin6" oninput="movePinFocus(this, 6)">
+                    </div>
+                    
+                    <button class="pin-connect-btn" id="connectBtn" onclick="connectWithPin()">
+                        연결하기
+                    </button>
+                    
+                    <div class="pin-error" id="pinError">
+                        PIN이 일치하지 않습니다. 다시 확인해주세요.
+                    </div>
+                </div>
+            </div>
+            
             <!-- Loading State -->
             <div id="loadingState" class="loading">
                 데이터를 불러오는 중...
@@ -409,11 +598,21 @@
     <!-- Toast -->
     <div id="toast" class="toast"></div>
     
+    <!-- Alarm Overlay -->
+    <div id="alarmOverlay" class="alarm-overlay">
+        <div class="alarm-content">
+            <div class="alarm-icon">🔔</div>
+            <div class="alarm-title">학원 갈 시간이에요!</div>
+            <div class="alarm-message" id="alarmAcademyName"></div>
+            <button class="alarm-stop-btn" onclick="stopAlarm()">알람 끄기</button>
+        </div>
+    </div>
+    
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, updateDoc, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         import { getStorage, ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
         
         // Firebase 설정
@@ -436,48 +635,136 @@
         let currentUser = null;
         let appData = null;
         let childData = null;
+        let childId = null;
+        let parentUserId = null;
         let currentPosition = null;
         let watchId = null;
+        let alarmInterval = null;
+        let currentAlarmAcademy = null;
         
-        // Get child ID from URL or localStorage
-        const urlParams = new URLSearchParams(window.location.search);
-        const childId = urlParams.get('childId') || localStorage.getItem('childId');
-        
-        if (!childId) {
-            alert('자녀 ID가 필요합니다. 부모 앱에서 연결해주세요.');
-        } else {
-            localStorage.setItem('childId', childId);
-        }
+        // Get child ID from localStorage
+        childId = localStorage.getItem('childId');
+        parentUserId = localStorage.getItem('parentUserId');
         
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
-            initAuth();
+            // Check if already connected
+            if (childId && parentUserId) {
+                // Already connected, load data
+                initAuth();
+            } else {
+                // Show PIN setup
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('pinSetup').classList.add('active');
+            }
+            
             requestNotificationPermission();
-            startLocationTracking();
             checkAlarms();
         });
         
+        // PIN input auto-focus
+        window.movePinFocus = function(input, position) {
+            // Only allow numbers
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            // Auto-focus next input
+            if (input.value && position < 6) {
+                document.getElementById(`pin${position + 1}`).focus();
+            }
+            
+            // Check if all 6 digits are entered
+            const allFilled = [1,2,3,4,5,6].every(i => 
+                document.getElementById(`pin${i}`).value
+            );
+            
+            document.getElementById('connectBtn').disabled = !allFilled;
+        }
+        
+        // Connect with PIN
+        window.connectWithPin = async function() {
+            const pin = [1,2,3,4,5,6].map(i => 
+                document.getElementById(`pin${i}`).value
+            ).join('');
+            
+            if (pin.length !== 6) {
+                return;
+            }
+            
+            document.getElementById('pinError').classList.remove('show');
+            document.getElementById('connectBtn').disabled = true;
+            document.getElementById('connectBtn').textContent = '연결 중...';
+            
+            try {
+                // Sign in anonymously to access Firebase
+                await signInAnonymously(auth);
+                
+                // Search for user with this PIN
+                const usersRef = collection(db, 'users');
+                const snapshot = await getDocs(usersRef);
+                
+                let found = false;
+                
+                for (const userDoc of snapshot.docs) {
+                    const userData = userDoc.data();
+                    const matchedChild = userData.children?.find(c => c.pin === pin);
+                    
+                    if (matchedChild) {
+                        // Found matching PIN!
+                        childId = matchedChild.id;
+                        parentUserId = userDoc.id;
+                        
+                        // Save to localStorage
+                        localStorage.setItem('childId', childId);
+                        localStorage.setItem('parentUserId', parentUserId);
+                        
+                        found = true;
+                        
+                        // Hide PIN screen, show app
+                        document.getElementById('pinSetup').classList.remove('active');
+                        document.getElementById('loadingState').classList.remove('hidden');
+                        
+                        // Load user data
+                        loadUserData(parentUserId);
+                        startLocationTracking();
+                        
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    // PIN not found
+                    document.getElementById('pinError').classList.add('show');
+                    document.getElementById('connectBtn').disabled = false;
+                    document.getElementById('connectBtn').textContent = '연결하기';
+                    
+                    // Clear PIN inputs
+                    [1,2,3,4,5,6].forEach(i => {
+                        document.getElementById(`pin${i}`).value = '';
+                    });
+                    document.getElementById('pin1').focus();
+                }
+            } catch (error) {
+                console.error('Connection error:', error);
+                alert('연결 중 오류가 발생했습니다. 다시 시도해주세요.');
+                document.getElementById('connectBtn').disabled = false;
+                document.getElementById('connectBtn').textContent = '연결하기';
+            }
+        }
+        
         // Auth
         function initAuth() {
-            // Use same user ID as parent
-            const parentUserId = urlParams.get('userId') || localStorage.getItem('parentUserId');
-            
-            if (parentUserId) {
-                localStorage.setItem('parentUserId', parentUserId);
-                loadUserData(parentUserId);
-            } else {
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        currentUser = user;
-                        loadUserData(user.uid);
-                    } else {
-                        signInAnonymously(auth).catch((error) => {
-                            console.error('Auth error:', error);
-                            alert('로그인 중 오류가 발생했습니다.');
-                        });
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    if (parentUserId) {
+                        loadUserData(parentUserId);
                     }
-                });
-            }
+                } else {
+                    signInAnonymously(auth).catch((error) => {
+                        console.error('Auth error:', error);
+                    });
+                }
+            });
         }
         
         // Load data from Firestore
@@ -767,6 +1054,32 @@
         
         // Show alarm notification
         async function showAlarmNotification(academy) {
+            currentAlarmAcademy = academy;
+            
+            // Show alarm overlay
+            document.getElementById('alarmAcademyName').textContent = academy.name;
+            document.getElementById('alarmOverlay').classList.add('active');
+            
+            // Start alarm cycle
+            await playAlarmCycle(academy);
+            
+            // Set up snooze (repeat every 3 minutes)
+            alarmInterval = setInterval(async () => {
+                await playAlarmCycle(academy);
+            }, 3 * 60 * 1000); // 3 minutes
+        }
+        
+        // Play full alarm cycle
+        async function playAlarmCycle(academy) {
+            // 1. Play soft chime bell
+            await playSoftChime();
+            
+            // Small pause
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // 2. Play voice alarms
+            await playVoiceAlarms(academy);
+            
             // Browser notification
             if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification('🎒 학원가자!', {
@@ -774,9 +1087,50 @@
                     icon: 'icon-192.png'
                 });
             }
+        }
+        
+        // Stop alarm
+        window.stopAlarm = function() {
+            if (alarmInterval) {
+                clearInterval(alarmInterval);
+                alarmInterval = null;
+            }
             
-            // Play voice alarms
-            await playVoiceAlarms(academy);
+            document.getElementById('alarmOverlay').classList.remove('active');
+            currentAlarmAcademy = null;
+        }
+        
+        // Play soft chime bell (Web Audio API)
+        async function playSoftChime() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Play 3 gentle tones: ding~ dong~ dang~
+            const frequencies = [880, 660, 440]; // A5, E5, A4
+            const duration = 0.4;
+            
+            for (let i = 0; i < frequencies.length; i++) {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Soft sine wave
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequencies[i];
+                
+                // Gentle envelope
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
+                
+                oscillator.start(now);
+                oscillator.stop(now + duration);
+                
+                // Wait between tones
+                await new Promise(resolve => setTimeout(resolve, duration * 1000 + 100));
+            }
         }
         
         // Show toast

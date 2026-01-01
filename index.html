@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>학원가자 - 자녀용</title>
+    <link rel="manifest" href="manifest.json">
     
     <!-- Gmarket Sans Font -->
     <style>
@@ -35,6 +39,124 @@
             margin: 0 auto;
         }
 
+        /* Onboarding Styles */
+        .onboarding {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .onboarding-title {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .onboarding-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .family-code-section {
+            margin-bottom: 30px;
+        }
+
+        .family-code-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .family-code-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .family-code-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .family-code-help {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .children-list {
+            margin-top: 30px;
+        }
+
+        .child-option {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .child-option:hover {
+            background: #eef0ff;
+            transform: translateY(-2px);
+        }
+
+        .child-option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .child-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* Main App Styles */
         .header {
             background: white;
             border-radius: 20px;
@@ -49,7 +171,7 @@
             margin-bottom: 10px;
         }
 
-        .child-name {
+        .child-name-header {
             color: #764ba2;
             font-size: 20px;
             margin-bottom: 15px;
@@ -344,6 +466,57 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        .logout-button {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .pwa-install-prompt {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .pwa-install-prompt h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .pwa-install-prompt p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .pwa-install-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .close-prompt {
+            background: transparent;
+            color: #999;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -352,11 +525,55 @@
             <div>로딩 중...</div>
         </div>
 
+        <!-- Onboarding Screen -->
+        <div id="onboarding" style="display: none;">
+            <div class="onboarding">
+                <div class="onboarding-title">🎒 학원가자!</div>
+                <div class="onboarding-subtitle">환영합니다!</div>
+
+                <div id="familyCodeSection" class="family-code-section">
+                    <div class="family-code-label">가족 코드를 입력하세요</div>
+                    <input type="text" 
+                           id="familyCodeInput" 
+                           class="family-code-input" 
+                           placeholder="예: ABC123"
+                           maxlength="8">
+                    <div class="family-code-help">
+                        부모님 앱에서 가족 코드를 확인하세요
+                    </div>
+                    <button class="submit-button" onclick="searchFamily()">다음</button>
+                </div>
+
+                <div id="childrenSection" style="display: none;">
+                    <div class="onboarding-subtitle">누구세요?</div>
+                    <div class="children-list" id="childrenList"></div>
+                    <button class="submit-button" id="selectChildButton" onclick="selectChild()" disabled>
+                        시작하기
+                    </button>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- PWA Install Prompt -->
+        <div id="pwaPrompt" class="pwa-install-prompt" style="display: none;">
+            <h3>📱 홈 화면에 추가하기</h3>
+            <p>학원가자를 홈 화면에 추가하면<br>앱처럼 편하게 사용할 수 있어요!</p>
+            <button class="pwa-install-button" onclick="showInstallInstructions()">
+                설치 방법 보기
+            </button>
+            <button class="close-prompt" onclick="closePWAPrompt()">
+                나중에
+            </button>
+        </div>
+
+        <!-- Main App -->
         <div id="app" style="display: none;">
             <!-- Header -->
             <div class="header">
                 <h1>🎒 학원가자!</h1>
-                <div class="child-name" id="childName">어린이</div>
+                <div class="child-name-header" id="childName">어린이</div>
                 
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -368,6 +585,8 @@
                         <div class="stat-label">배지</div>
                     </div>
                 </div>
+
+                <button class="logout-button" onclick="logout()">다른 계정으로 로그인</button>
             </div>
 
             <!-- Voice Messages -->
@@ -407,7 +626,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         import { getStorage, ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
         // Firebase Configuration
@@ -428,8 +647,10 @@
         const storage = getStorage(app);
 
         // Global variables
-        let currentUser = null;
+        let currentChildId = null;
+        let currentParentId = null;
         let currentAudio = null;
+        let selectedChildId = null;
 
         // Badge definitions
         const BADGES = [
@@ -452,18 +673,6 @@
 
         function getTodayString() {
             return new Date().toISOString().split('T')[0];
-        }
-
-        function getMonthStart(date) {
-            return new Date(date.getFullYear(), date.getMonth(), 1);
-        }
-
-        function getMonthEnd(date) {
-            return new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        }
-
-        function formatTime(hours, minutes) {
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
         }
 
         function getAttendanceRate(childData) {
@@ -491,6 +700,128 @@
             return earnedBadges;
         }
 
+        // Search for family by code
+        window.searchFamily = async function() {
+            const familyCode = document.getElementById('familyCodeInput').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            if (!familyCode) {
+                errorDiv.textContent = '가족 코드를 입력하세요';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            errorDiv.style.display = 'none';
+
+            try {
+                // Search for parent with this family code
+                const parentsRef = collection(db, 'parents');
+                const q = query(parentsRef, where('familyCode', '==', familyCode));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    errorDiv.textContent = '가족 코드를 찾을 수 없습니다';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Get parent data
+                const parentDoc = querySnapshot.docs[0];
+                currentParentId = parentDoc.id;
+                const parentData = parentDoc.data();
+
+                if (!parentData.children || parentData.children.length === 0) {
+                    errorDiv.textContent = '등록된 자녀가 없습니다';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Show children list
+                displayChildrenList(parentData.children);
+
+            } catch (error) {
+                console.error('Error searching family:', error);
+                errorDiv.textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+                errorDiv.style.display = 'block';
+            }
+        };
+
+        // Display children list
+        function displayChildrenList(children) {
+            const childrenList = document.getElementById('childrenList');
+            childrenList.innerHTML = '';
+
+            children.forEach(child => {
+                const childDiv = document.createElement('div');
+                childDiv.className = 'child-option';
+                childDiv.dataset.childId = child.id;
+                childDiv.innerHTML = `<div class="child-name">${child.name}</div>`;
+                
+                childDiv.onclick = function() {
+                    document.querySelectorAll('.child-option').forEach(el => 
+                        el.classList.remove('selected')
+                    );
+                    this.classList.add('selected');
+                    selectedChildId = this.dataset.childId;
+                    document.getElementById('selectChildButton').disabled = false;
+                };
+
+                childrenList.appendChild(childDiv);
+            });
+
+            document.getElementById('familyCodeSection').style.display = 'none';
+            document.getElementById('childrenSection').style.display = 'block';
+        }
+
+        // Select child and save to localStorage
+        window.selectChild = function() {
+            if (!selectedChildId || !currentParentId) return;
+
+            // Save to localStorage
+            localStorage.setItem('childId', selectedChildId);
+            localStorage.setItem('parentId', currentParentId);
+
+            // Load main app
+            currentChildId = selectedChildId;
+            loadMainApp();
+        };
+
+        // Logout function
+        window.logout = function() {
+            if (confirm('다른 계정으로 로그인하시겠습니까?')) {
+                localStorage.removeItem('childId');
+                localStorage.removeItem('parentId');
+                localStorage.removeItem('pwaPromptClosed');
+                location.reload();
+            }
+        };
+
+        // Load main app
+        function loadMainApp() {
+            document.getElementById('onboarding').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+
+            // Show PWA install prompt if not closed before
+            if (!localStorage.getItem('pwaPromptClosed') && !window.matchMedia('(display-mode: standalone)').matches) {
+                setTimeout(() => {
+                    document.getElementById('pwaPrompt').style.display = 'block';
+                }, 2000);
+            }
+
+            // Listen to child data
+            const childDocRef = doc(db, 'children', currentChildId);
+            onSnapshot(childDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const childData = docSnapshot.data();
+                    updateUI(childData);
+                } else {
+                    alert('자녀 정보를 찾을 수 없습니다.');
+                    logout();
+                }
+            });
+        }
+
         // Render voice messages
         async function renderVoiceMessages(childData) {
             const container = document.getElementById('voiceMessages');
@@ -502,7 +833,6 @@
 
             container.innerHTML = '';
             
-            // Sort by date, newest first
             const sortedMessages = [...childData.voiceMessages].sort((a, b) => 
                 new Date(b.createdAt) - new Date(a.createdAt)
             );
@@ -527,7 +857,6 @@
 
         // Play voice message
         async function playVoiceMessage(url, element) {
-            // Stop current audio if playing
             if (currentAudio) {
                 currentAudio.pause();
                 document.querySelectorAll('.voice-message').forEach(el => 
@@ -536,7 +865,6 @@
             }
 
             try {
-                // Get download URL from Firebase Storage
                 const audioRef = ref(storage, url);
                 const downloadURL = await getDownloadURL(audioRef);
                 
@@ -642,28 +970,25 @@
 
         // Check attendance
         window.checkAttendance = async function(academyId) {
-            if (!currentUser) return;
+            if (!currentChildId) return;
             
             const todayStr = getTodayString();
-            const childDocRef = doc(db, 'children', currentUser);
+            const childDocRef = doc(db, 'children', currentChildId);
             
             try {
                 const childDoc = await getDoc(childDocRef);
                 const childData = childDoc.data();
                 
-                // Update attendance
                 const attendance = childData.attendance || {};
                 if (!attendance[todayStr]) {
                     attendance[todayStr] = {};
                 }
                 attendance[todayStr][academyId] = true;
                 
-                // Calculate points
                 const pointsToAdd = 10;
                 const totalPoints = (childData.totalPoints || 0) + pointsToAdd;
                 const totalDays = (childData.totalDays || 0) + 1;
                 
-                // Check for new badges
                 const updatedData = {
                     ...childData,
                     attendance,
@@ -674,7 +999,6 @@
                 const newBadges = checkBadges(updatedData);
                 const badges = [...(childData.badges || []), ...newBadges];
                 
-                // Update Firestore
                 await updateDoc(childDocRef, {
                     attendance,
                     totalPoints,
@@ -682,7 +1006,6 @@
                     badges
                 });
                 
-                // Show celebration
                 showCelebration(pointsToAdd, newBadges);
                 
             } catch (error) {
@@ -713,35 +1036,47 @@
             document.getElementById('celebration').classList.remove('show');
         };
 
+        // PWA functions
+        window.showInstallInstructions = function() {
+            const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            
+            let instructions = '';
+            
+            if (isIOS) {
+                instructions = `📱 iOS 설치 방법:\n\n1. 화면 하단의 공유 버튼 (□↑) 클릭\n2. "홈 화면에 추가" 선택\n3. "추가" 버튼 클릭\n4. 홈 화면에 아이콘 생성 완료!`;
+            } else if (isAndroid) {
+                instructions = `📱 Android 설치 방법:\n\n1. 화면 우측 상단 메뉴 (⋮) 클릭\n2. "홈 화면에 추가" 선택\n3. "설치" 또는 "추가" 버튼 클릭\n4. 홈 화면에 아이콘 생성 완료!`;
+            } else {
+                instructions = `📱 설치 방법:\n\n브라우저 메뉴에서\n"홈 화면에 추가" 또는\n"바로가기 추가"를 선택하세요`;
+            }
+            
+            alert(instructions);
+            closePWAPrompt();
+        };
+
+        window.closePWAPrompt = function() {
+            document.getElementById('pwaPrompt').style.display = 'none';
+            localStorage.setItem('pwaPromptClosed', 'true');
+        };
+
         // Initialize app
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Get child ID from URL or localStorage
-                const urlParams = new URLSearchParams(window.location.search);
-                const childId = urlParams.get('childId') || localStorage.getItem('childId');
-                
-                if (!childId) {
-                    alert('자녀 정보를 찾을 수 없습니다.');
-                    return;
+                // Check localStorage for saved login
+                const savedChildId = localStorage.getItem('childId');
+                const savedParentId = localStorage.getItem('parentId');
+
+                if (savedChildId && savedParentId) {
+                    // Auto login
+                    currentChildId = savedChildId;
+                    currentParentId = savedParentId;
+                    loadMainApp();
+                } else {
+                    // Show onboarding
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('onboarding').style.display = 'block';
                 }
-                
-                currentUser = childId;
-                localStorage.setItem('childId', childId);
-                
-                // Listen to child data
-                const childDocRef = doc(db, 'children', childId);
-                onSnapshot(childDocRef, (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const childData = docSnapshot.data();
-                        updateUI(childData);
-                        
-                        document.getElementById('loading').style.display = 'none';
-                        document.getElementById('app').style.display = 'block';
-                    } else {
-                        alert('자녀 정보를 찾을 수 없습니다.');
-                    }
-                });
-                
             } else {
                 // Sign in anonymously
                 try {
